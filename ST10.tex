@@ -1,0 +1,850 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[style=script-v1, privacy=anonym]{../tools/library}
+\usepackage{cancel}
+\renewcommand{\Lecturer}{Prof. R. Schilling}
+\begin{document}
+\head{ST10: Stochastik I}{Sommersemester 2026}
+
+\tableofcontents
+
+\newpage
+
+\section{Einführung}
+
+\subsection{Grundlegende Begriffe}
+
+\begin{definition}[Experiment]
+    Ein \emph{(Zufalls-)Experiment} ist ein Meßraum $(\Omega, \A)$, bestehend aus einer Menge $\Omega$ und einer $\sigma$-Algebra $\A \subset \pot(\Omega)$. Dann heißt
+    $$\omega \in \Omega \; \text{Ergebnis} \qquad A \in \A \; \text{Ereignis}$$
+\end{definition}
+
+
+\begin{definition}[Kolmogorov 1933]
+    Sei $(\Omega, \A)$ ein Experiment. Eine Mengenfunktion $\P: \A \to [0,1]$ mit den Eigenschaften
+    \begin{enumerate}
+        \item[(M1)] $\P(\leer) = 0, \; \P(\Omega) = 1$
+        \item[(M2)] $(A_n)_{n\in\N} \subset \A$ paarweise disjunkt $\displaystyle\;\Longrightarrow\; \P(\bigsqcup_{n\in \N} A_n) = \sum_{n\in \N} \P(A_n)$
+    \end{enumerate}
+    heißt \emph{Wahrscheinlichkeitsmaß} (W-Maß) oder \emph{Wahrscheinlichkeit}. Das Tripel $(\Omega, \A, \P)$ wird \emph{Wahrscheinlichkeitsraum} genannt.
+\end{definition}
+
+\begin{note}
+    Jedes W-Maß ist insbesondere ein endliches Maß. Daher gelten alle Sätze aus \texttt{AN30} (siehe Bibliothek).
+\end{note}
+
+\begin{definition}\Xlabel{Definition}{subsub}{Zufallsvariable}
+    Es sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum und $(E, \mathscr{E})$ ein beliebiger Meßraum. Eine meßbare Abbildung
+    $$X: (\Omega, \A) \to (E, \mathscr{E})$$
+    heißt \emph{($E$-wertige) Zufallsvariable} (kurz: ZV).
+\end{definition}
+
+\begin{note}
+    Wir werden meist $E = \R$ oder $E = \R^d$ zusammen mit den Borel-$\sigma$-Algebren betrachten. Die Wahl des W-Raums und damit der ZV ist nicht eindeutig und sollte daher als mathematisches Modell gesehen werden.
+\end{note}
+
+
+\begin{definition}\Xlabel{Definition}{subsub}{Verteilung und Erwartungswert}
+    Es sei $X: \Omega \to E$ eine ZV auf dem W-Raum $(\Omega, \A, \P)$. Die \emph{Verteilung} oder \emph{Wahrscheinlichkeitsverteilung} der ZV $X$ ist das Bildmaß
+    $$B \mapsto \P_X(B) := \P(X \in B) := \P(X\r(B)), \quad B \in \mathscr{E}$$
+    von $\P$ unter der meßbaren Abbildung $X$.
+
+    Der \emph{Erwartungswert} einer reellen ZV $X: (\Omega, \A) \to (\R, \Borel \R)$ ist das Integral
+    $$\E X = \int X \d\P = \int_\Omega X(\omega) \, \P(d\omega) = \int_\R x \, \P(X \in dx)$$
+\end{definition}
+
+\begin{note}[Eigenschaften Erwartungswert] \Theorem
+    Da der Erwartungswert ein Integral ist, gelten natürlich auch alle Aussagen für Integrale aus \texttt{AN30}. Im Folgenden seien $a,b\in \R$ und $X_n, X, Y$ Zufallsvariablen auf $(\Omega, \A, \P)$.
+
+    \begin{enumerate}[label=\alph*)]
+        \item $\E(aX+bY) = a\E X + b\E Y$, wenn $\E|X|, \E|Y| <\infty$; \hfill (Linearität)
+        \item $\E X \geqslant 0$, wenn $X\geqslant 0$; \hfill (Positivität)
+        \item $\E\left(\liminf_{n\to\infty} X_n\right) \leqslant \liminf_{n\to\infty} \E X_n$, wenn $X_n \geqslant 0$; \hfill (Fatou)
+        \item $\E X = \sup_{n\in\N} \E X_n = \lim_{n\to\infty} \E X_n$, wenn $X_n \geqslant 0, \; X_n \uparrow X$; \hfill (Beppo Levi)
+        \item $\displaystyle \lim_{n\to\infty} \E|X_n - X| = 0$ und $\lim_{n\to\infty} \E X_n = \E X$, \hfill (dom. Konv.)\\
+        wenn $\lim_{n\to\infty} X_n(\omega) = X(\omega)$ und $|X_n(\omega)| \leqslant Y(\omega)$ $\P$-fü für eine integrierbare ZV $Y \in \Lp{\P}$, d.h. $\E|Y| <\infty$.
+        \item $\norm{X}_{L^p} := \left(\E\left[|X|^p\right]\right)^{1/p}, \; (1\leqslant p <\infty)$, \hfill ($L^p$-Räume)\\
+        $\norm{X}_{L^\infty} := \operatorname{ess\,sup} |X| := \inf\{c\geqslant 0 : \P(|X|\geqslant c) = 0\}$,\\
+        $X \in \Lp{\P}$ genau dann, wenn $\norm{X}_{L^p} <\infty$;
+        \item $\E|XY| \leqslant \norm{X}_{L^p} \norm{Y}_{L^q}$ für $1\leqslant p,q\leqslant \infty$, $p^{-1}+q^{-1}=1$; \hfill (Hölder)
+        \item $\varphi(\E X) \leqslant \E \varphi(X)$ für $X\geqslant 0$ und konvexe $\varphi: [0,\infty)\to[0,\infty)$; \hfill (Jensen)
+        \item $\P(|X|\geqslant \epsilon) \leqslant \epsilon^{-1}\E|X|$; \hfill (Markov)
+        \item $\P(|X-\E X|\geqslant \epsilon) \leqslant \epsilon^{-2}\E\left[(X-\E X)^2\right]$; \hfill (Chebyshev)
+        \item $\displaystyle \E|X| = \int_0^\infty \P(|X|\geqslant t)\,dt = \int_0^\infty \P(|X|>t)\,dt$
+    \end{enumerate}
+\end{note}
+
+\subsection{Kombinatorik}
+
+\begin{lemma}[Permutationen] \Theorem
+    Es sei $\Omega$ eine Menge mit $|\Omega| = n$. Dann gilt
+    $$\left|\{(\omega_1, \ldots, \omega_n) \mid \omega_i \in \Omega, \; \omega_i \neq \omega_k \text{ für } i\neq k\}\right| = n! = 1\cdot 2 \cdot 3 \cdots n.$$
+\end{lemma}
+
+\begin{lemma}[Kombinationen -- klassisch] \Theorem
+    Es sei $\Omega$ eine Menge mit $|\Omega| = n$ und $k\in \{1 ,\dots ,n \}$. Dann gilt
+    $$\left|\{(\omega_1, \ldots, \omega_k) \mid \omega_i \in \Omega, \; \omega_1 < \cdots < \omega_k\}\right| = \binom{n}{k} = \frac{n!}{k!(n-k)!}$$
+    d.h. $\binom{n}{k}$ ist die Anzahl aller $k$-elementigen Teilmengen von $\Omega$.
+\end{lemma}
+
+\begin{lemma}[Variationen -- klassisch] \Theorem
+    Es sei $\Omega$ eine Menge mit $|\Omega| = n$ und $k\in \{1 ,\dots ,n \}$. Dann gilt
+    $$\left|\{(\omega_1, \ldots, \omega_k) \mid \omega_i \in \Omega, \; \omega_i \neq \omega_j \text{ für } i\neq j\}\right| = \frac{n!}{(n-k)!}$$
+    d.h. es gibt $\frac{n!}{(n-k)!}$ Möglichkeiten, $k$ von $n$ Elementen ohne Zurücklegen, mit Berücksichtigung der Reihenfolge zu ziehen.
+\end{lemma}
+
+\begin{note}
+     Permutationen sind klassische Variationen für $k=n$. Insbesondere gibt es genauso viele Möglichkeiten $n$ auf $n-1$ Plätze zu verteilen wie $n$ auf $n$ Plätze zu verteilen.
+\end{note}
+\begin{lemma}[Kombinationen -- mit Wiederholung]
+    Es sei $\Omega$ eine Menge mit $|\Omega| = n$ und $k\in \{1 ,\dots ,n \}$. Dann gilt
+    $$\left|\{(\omega_1, \ldots, \omega_k) \mid \omega_i \in \Omega, \; \omega_1 \leqslant \cdots \leqslant \omega_k\}\right| = \binom{n+k-1}{k}$$
+    d.h. $\binom{n+k-1}{k}$ ist die Anzahl aller Möglichkeiten, $k$ Elemente aus $\Omega$ mit Zurücklegen und ohne Berücksichtigung der Reihenfolge zu ziehen.
+\end{lemma}
+
+\begin{lemma}[Variationen -- mit Wiederholung]
+    Es sei $\Omega$ eine Menge mit $|\Omega| = n$ und $k\in \{1 ,\dots ,n \}$. Dann gilt
+    $$\left|\{(\omega_1, \ldots, \omega_k) \mid \omega_i \in \Omega\}\right| = |\Omega^k| = n^k$$
+    d.h. es gibt $n^k$ Möglichkeiten, $k$ Elemente aus $\Omega$ mit Zurücklegen und mit Berücksichtigung der Reihenfolge zu ziehen.
+\end{lemma}
+
+\begin{theorem}[Abzählen von Abbildungen]\Theorem
+    Es seien $n,k \in \N$ und $f: \{1,\ldots,k\} \to \{1,\ldots,n\}$ eine Abbildung. Dann gilt für die Anzahl der Abbildungen $f$ mit den jeweiligen Eigenschaften:
+    \begin{enumerate}[label=\alph*)]
+        \item Ist $f$ injektiv (für $n\geqslant k$), so gibt es $\dbinom{n}{k}\cdot k!$ solche Abbildungen.
+        \item Ist $f$ streng monoton wachsend (für $n\geqslant k$), so gibt es $\dbinom{n}{k}$ solche Abbildungen.
+        \item Ist $f$ monoton wachsend (für beliebige $n,k$), so gibt es $\dbinom{n+k-1}{k}$ solche Abbildungen.
+        \item Ist $f$ surjektiv (für $n\leqslant k$), so gibt es
+        $$T(k,n) := \sum_{\ell=0}^{n} (-1)^\ell \binom{n}{\ell}(n-\ell)^k$$
+        solche Abbildungen.
+    \end{enumerate}
+\end{theorem}
+
+
+\subsection{Grundmodelle der Wahrscheinlichkeitstheorie}
+
+\begin{definition}[Diskreter Wahrscheinlichkeitsraum]\Theorem
+    Ein W-Raum $(\Omega, \A, \P)$ heißt \emph{diskret}, wenn $\Omega$ abzählbar (endlich oder unendlich) und $\A = \pot(\Omega)$ ist. Eine auf einem diskreten W-Raum definierte ZV bzw. Verteilung nennt man ebenso \emph{diskret}.
+\end{definition}
+
+\begin{note}
+    Da jede Teilmenge $A \subset \Omega$ einer abzählbaren Menge selbst abzählbar ist, gilt
+    $$\P(A) = \sum_{\omega \in A} \P(\{\omega\}) \quad \text{also} \quad \P = \sum_{\omega \in \Omega} \P(\{\omega\}) \, \delta_\omega$$
+    d.h. die Werte $\P(\{\omega\}), \; \omega \in \Omega$, bestimmen $\P$ vollständig. Auf einem diskreten W-Raum sind alle Abbildungen $X: \Omega \to \R^d$ meßbar, der Wertebereich $X(\Omega)$ ist abzählbar, und beliebige Funktionen $f(X)$ einer ZV $X$ sind wieder Zufallsvariablen. Das Integral wird dabei zu einer Summe
+    $$\E X = \sum_{\omega \in \Omega} X(\omega) \, \P(\{\omega\}) = \sum_{x \in X(\Omega)} x \, \P(X = x) $$
+    $$\E f(X) = \sum_{\omega \in \Omega} f(X(\omega)) \, \P(\{\omega\}) = \sum_{x \in X(\Omega)} f(x) \, \P(X = x)$$
+
+\end{note}
+
+\begin{definition}[Stetige und absolutstetige Zufallsvariable]
+    Eine ZV $X = (X_1, \ldots, X_d): \Omega \to \R^d$ auf einem W-Raum $(\Omega, \A, \P)$ heißt \emph{stetig}, wenn die Verteilungsfunktion
+    $$F_X(x_1, x_2, \ldots, x_d) := \P(X_1 \leqslant x_1, X_2 \leqslant x_2, \ldots, X_d \leqslant x_d), \quad (x_1, x_2, \ldots, x_d) \in \R^d,$$
+    stetig ist. $X$ heißt \emph{absolutstetig}, wenn $X$ eine Dichte bezüglich des Lebesguemaßes besitzt:
+    $$\P_X(dx) = p(x)\d x$$
+\end{definition}
+
+
+\begin{lemma}[Eigenschaften der Verteilungsfunktion]\Theorem
+    Die Verteilungsfunktion $F(x) := F_X(x) := \P(X \leqslant x), \; x \in \R$, einer reellen ZV $X: \Omega \to \R$ hat folgende Eigenschaften:
+    \begin{enumerate}[label=\alph*)]
+        \item $x \mapsto F(x)$ ist monoton wachsend;
+        \item $x \mapsto F(x)$ ist rechtsseitig stetig;
+        \item $\displaystyle\lim_{x\to-\infty} F(x) = 0$ und $\displaystyle\lim_{x\to\infty} F(x) = 1$.
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{example}[Wichtige stetige Verteilungen] \Theorem \mbox{}  \newline
+    \begin{enumerate}[label=\alph*)]
+        \item \textbf{Gleichverteilung auf dem Intervall $[a,b]$.} $X \sim U[a,b]$, d.h. $X$ hat die Dichte $p(x) = (b-a)^{-1}\1_{[a,b]}(x)$. Es gilt $\displaystyle\int \1_{[a,b]}(x)\d x = b-a$ und 
+        $$\E X = \mu = \frac{1}{b-a}\int_a^b x \d x = \frac{1}{2}(a+b)$$ sowie $$ \mathbb{V}X = \sigma^2 = \frac{1}{b-a}\int_a^b (x-\mu)^2 \d x = \frac{1}{12}(b-a)^2$$
+        \item \textbf{(Einseitige) Exponentialverteilung.} $X \sim \mathrm{Exp}(\lambda), \; \lambda > 0$, d.h. $X$ hat die Dichte $p(x) = \lambda e^{-\lambda x}\1_{[0,\infty)}(x)$. Es gilt $\displaystyle\int_0^\infty e^{-\lambda x}\d x = 1/\lambda$ und
+        $$\E X = \mu = \int_0^\infty x\lambda e^{-\lambda x}\d x = \frac{1}{\lambda}$$
+        sowie
+        $$\mathbb{V}X = \sigma^2 = \int_0^\infty (x-\mu)^2 \lambda e^{-\lambda x}\d x = \frac{1}{\lambda^2}$$
+        Die Exponentialverteilung wird häufig zur Modellierung von Wartezeiten und Wachstumsprozessen verwendet.
+
+        \item \textbf{(Eindimensionale) Cauchy-Verteilung.} $X \sim \mathcal C(\lambda, a)$ heißt Cauchy-verteilt, wenn $p(x) = \dfrac{1}{\pi}\dfrac{\lambda}{\lambda^2+(x-a)^2}$ gilt. Wegen
+        $$\int_{-\infty}^\infty \frac{\lambda \d x}{\lambda^2+(x-a)^2} \overset{\substack{y=(x-a)/\lambda \\ \d y = \d x/\lambda}}{=} \int_{-\infty}^\infty \frac{\d y}{1+y^2} = \pi$$
+        ist $p(x)$ eine W-Dichte, aber wegen $|x|p(x) \approx c|x|^{-1}$ und $x^2 p(x) \approx c$ (für $|x|\to\infty$) existieren weder Erwartungswert noch Varianz.
+
+        \item \textbf{(Eindimensionale) Normalverteilung.} $X \sim \mathcal N(\mu, \sigma^2)$, d.h. $X$ hat die Dichte
+        $$g_{\mu,\sigma^2}(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-(x-\mu)^2/2\sigma^2}, \quad \mu \in \R, \; \sigma^2 > 0, \; x \in \R$$
+        mit $\int_\R e^{-x^2/2}\d x = \sqrt{2\pi}$. Die Parameter $\mu$ und $\sigma^2$ sind Erwartungswert und Varianz:
+        $$\E X = \mu \qquad \mathbb{V}X = \sigma^2$$
+        $\sigma$ heißt \emph{Standardabweichung}; für $\sigma=1, \mu = 0$ nennen wir $\mathcal N (0,1)$ die Standard - Normalverteilung oder \emph{Gaußverteilung}
+
+\end{enumerate}
+\end{example}
+
+\newpage
+
+\section{Bedingung und Unabhängigkeit}
+
+\subsection{Bedingte Wahrscheinlichkeiten}
+
+Sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum. 
+
+
+\begin{definition}[Bedingte Wahrscheinlichkeit]\Theorem
+    Die \emph{bedingte Wahrscheinlichkeit} von $A \in \A$ gegeben $B \in \A$ ist
+    $$\P(A \mid B) := \begin{cases} \dfrac{\P(A \cap B)}{\P(B)}, & \text{für } \P(B) > 0, \\[1em] 0, & \text{für } \P(B) = 0. \end{cases}$$
+\end{definition}
+
+
+\begin{theorem}[Eigenschaften und Satz von Bayes]\Theorem
+    Es sei $(\Omega, \A, \P)$ ein W-Raum und $A_m, B_n, A, B \in \A$.
+    \begin{enumerate}[label=\alph*)]
+        \item $A \mapsto \P(A \mid B)$ ist für alle $B \in \A$ mit $\P(B) > 0$ ein W-Maß auf $(\Omega, \A)$.
+        \item \emph{Kettenformel.} Es gilt
+        $$\P(A_1 \cap A_2 \cap \cdots \cap A_n) = \P(A_1)\cdot \P(A_2\mid A_1)\, \P(A_3 \mid A_1\cap A_2)\cdots \P(A_n \mid A_1 \cap \cdots \cap A_{n-1}) $$
+        $$= \P(A_1) \prod_{m=2}^n \P(A_m \mid A_1 \cap \cdots \cap A_{m-1})$$
+        \item \emph{Totale Wahrscheinlichkeit.} Für jede Zerlegung $\bigsqcup_{n\in\N} B_n = \Omega$ von $\Omega$ gilt
+        $$\P(A) = \sum_{n=1}^\infty \P(B_n)\, \P(A \mid B_n)$$
+        \item \emph{Bayessche Formel.} Für jede Zerlegung $\bigsqcup_{n\in\N} B_n = \Omega$ von $\Omega$ gilt
+        $$\P(B_m \mid A) = \frac{\P(B_m)\, \P(A \mid B_m)}{\sum_{n=1}^\infty \P(B_n)\, \P(A \mid B_n)}$$
+        insbesondere ist
+        $$\P(B \mid A) = \frac{\P(B)\, \P(A \mid B)}{\P(B)\, \P(A \mid B) + \P(B^c)\, \P(A \mid B^c)}$$
+    \end{enumerate}
+\end{theorem}
+
+
+\subsection{Unabhängigkeit}
+
+\begin{definition}[Unabhängigkeit von Mengen]\Theorem
+    Es sei $I$ eine beliebige Indexmenge. Die Mengen $(A_i)_{i\in I} \subset \A$ heißen \emph{unabhängig} (u.a.), wenn gilt
+    $$\forall J \subset I, \; |J| < \infty: \quad \P\left(\bigcap_{i\in J} A_i\right) = \prod_{i\in J} \P(A_i)$$
+\end{definition}
+
+\begin{note}
+$$ \text{Paarweise Unabhängigkeit} \quad \begin{array}{c}
+     \xLeftarrow{\qquad }  \\
+     \xcancel{\xRightarrow{\qquad }}
+\end{array} \quad \text{Unabhängigkeit} $$
+\end{note}
+
+\begin{definition}[Unabhängigkeit von Familien und ZVn]
+    Es seien $I$ eine beliebige Indexmenge und $(E_i, \mathscr{E}_i)$ Meßräume.
+    \begin{enumerate}[label=\alph*)]
+        \item Die Familien $\mathscr{F}_i \subset \A, \; i \in I$, heißen \emph{unabhängig}, wenn gilt
+        $$\forall J \subset I, \; |J| < \infty, \; \forall A_i \in \mathscr{F}_i, \; i \in J: \quad \P\left(\bigcap_{i\in J} A_i\right) = \prod_{i\in J} \P(A_i)$$
+        \item Die ZV $X_i: (\Omega, \A) \to (E_i, \mathscr{E}_i), \; i \in I$, heißen \emph{unabhängig}, wenn die $\sigma$-Algebren
+        $$\sigma(X_i) = X_i\r(\mathscr{E}_i) = \{\{X_i \in F\} \mid F \in \mathscr{E}_i\}, \quad i \in I$$
+        unabhängig sind.
+    \end{enumerate}
+\end{definition}
+
+
+\begin{lemma}
+    Für jede Indexmenge $I$ sind die folgenden Aussagen äquivalent:
+    \begin{enumerate}[label=\alph*)]
+        \item die Ereignisse $A_i, \; i \in I$, sind unabhängig;
+        \item die $\sigma$-Algebren $\sigma(A_i), \; i \in I$, sind unabhängig;
+        \item die Zufallsvariablen $\1_{A_i}, \; i \in I$, sind unabhängig.
+    \end{enumerate}
+\end{lemma}
+
+\begin{note}
+    Während ''Weglassen'' die Unabhängigkeit nicht zerstört, können nicht ohne Weiteres Mengen zu unabhängigen Systemen hinzugefügt werden. Ausnahmen sind (wie das Lemma zeigt): $\leer, \Omega$.
+\end{note}
+
+\begin{theorem}
+    Es seien $\mathscr{F}_i \subset \A, \; i \in I$, $\cap$-stabile Familien ($F, G \in \mathscr{F}_i \Rightarrow F \cap G \in \mathscr{F}_i$). Dann gilt
+    $$\mathscr{F}_i, \; i \in I \; \text{unabhängig} \quad \Longleftrightarrow \quad \sigma(\mathscr{F}_i), \; i \in I \; \text{unabhängig}$$
+\end{theorem}
+
+\begin{corollary}[1. Blocklemma]\Theorem
+    Es seien $\mathscr{F}_{ik} \subset \A, \; 1 \leqslant i \leqslant m, \; 1 \leqslant k \leqslant n(i)$, unabhängige $\cap$-stabile Familien. Dann sind auch die folgenden $\sigma$-Algebren unabhängig:
+    $$\mathscr{G}_i := \sigma(\mathscr{F}_{i1}, \ldots, \mathscr{F}_{i n(i)}), \quad 1 \leqslant i \leqslant m$$
+\end{corollary}
+
+\begin{corollary}[2. Blocklemma]\Theorem
+    Es seien $X_{ik}: \Omega \to E, \; 1 \leqslant k \leqslant n(i), \; 1 \leqslant i \leqslant m$, unabhängige ZV und $f_i: E^{n(i)} \to \R$ meßbare reelle Funktionen. Dann sind auch die ZV
+    $$f_i(X_{i1}, \ldots, X_{i n(i)}), \quad 1 \leqslant i \leqslant m$$
+    unabhängig.
+\end{corollary}
+
+\begin{note}
+    Die Blocklemmata besagen, dass man unabhängige Objekte beliebig zu disjunkten Blöcken zusammenfassen und pro Block verrechnen darf, ohne die Unabhängigkeit \emph{zwischen} den Blöcken zu verlieren -- im 1. Blocklemma für erzeugte $\sigma$-Algebren, im 2. Blocklemma für Funktionen $f_i$ angewandt auf Gruppen von Zufallsvariablen. Beispielsweise sind für unabhängige $X_1,\ldots,X_{10}$ dann auch $X_1+X_2+X_3$, $\max\{X_4,\ldots,X_7\}$ und $X_8\cdot X_9\cdot X_{10}$ unabhängig.
+\end{note}
+
+
+\begin{theorem}[Charakt. Unabhängigkeit]\Theorem
+    Es seien $X_1, \ldots, X_n: (\Omega, \A) \to (E, \mathscr{E})$ ZV und $\mathscr{G}$ sei ein $\cap$-stabiler Erzeuger von $\mathscr{E}$. Dann sind äquivalent:
+    \begin{enumerate}[label=\alph*)]
+        \item $X_1, \ldots, X_n$ sind unabhängig;
+        \item $\P(X_1 \in G_1, \ldots, X_n \in G_n) = \displaystyle\prod_{k=1}^n \P(X_k \in G_k) \hfill \forall G_1, \ldots, G_n \in \mathscr{G}$
+        \item $\P_{X_1,\ldots,X_n} = \P_{X_1} \otimes \cdots \otimes \P_{X_n}$.
+    \end{enumerate}
+    Wenn $E = \R^d$ ist, dann sind a)--c) auch äquivalent zu (siehe \ref{Charakteristische Funktion} )
+    \begin{enumerate}[label=\alph*), start=4]
+        \item $\displaystyle\phi_{(X_1,\dots,X_n)}(\xi_1,\dots, \xi_n) = \prod_{k=1}^n \phi_{X_k}(\xi_k) \hfill \forall \xi_1,\dots , \xi_n \in \R^d$
+    \end{enumerate}
+\end{theorem}
+
+
+\begin{corollary}
+    Es seien $X_1, \dots, X_n: \Omega \to \R^d$ unabhängige ZV und $f_1, \dots, f_n: \R^d \to \R$ meßbar. Wenn $f_i \ge 0$ ($i = 1, \dots, n$) oder $f_i(X_i) \in L^1(\P)$ ($i = 1, \dots, n$), dann ist
+    $$\E\left(\prod_{i=1}^n f_i(X_i)\right) = \prod_{i=1}^n \E f_i(X_i);$$
+    insbesondere gilt
+    $$f_i(X_i) \in L^1(\P) \; \forall i \;\Longrightarrow\; \prod_{i=1}^n f_i(X_i) \in L^1(\P).$$
+    \emph{Speziallfall $n=2$}: $X, Y$ u.a., $f,g, h\geq 0$, dann
+    $$\E [f(X)g(Y)] = \E f(x) \E g(Y)$$
+    $$\E h(X,Y) = \E h(X,Y) = \iint h(x,y) \, \P(X \in dx) \, \P(Y \in dy) $$$$= \E \int h(x, Y) \, \P(X \in dx) = \E \int h(X, y) \, \P(Y \in dy).$$
+\end{corollary}
+
+\begin{definition}[Faltung] \Theorem
+    Es seien $\mu, \nu$ W-Maße auf $(\R^d, \Borel{\R^d})$. Das durch
+    $$\mu \ast \nu(B) := \iint \1_B(x+y) \, \mu(dx) \, \nu(dy), \quad B \in \Borel{\R^d},$$
+    definierte W-Maß auf $(\R^d, \Borel{\R^d})$ heißt \emph{Faltung} von $\mu$ und $\nu$.
+\end{definition}
+
+\begin{theorem}
+    Es seien $X, Y: \Omega \to \R^d$ unabhängige ZV. Dann ist
+    $$\P_{X+Y} = \P_X \ast \P_Y.$$
+    Wenn $X \sim f(x)\,dx$ und $Y \sim g(x)\,dx$, dann $X + Y \sim h(z)\,dz$ mit
+    $$h(z) = \int f(z-x) g(x) \, dx.$$
+\end{theorem}
+
+\begin{note}
+    Dieser Satz zeigt, dass $\P_X  * \P_Y $ das Bildmaß von $\P_X\otimes \P_Y = \P_{X,Y}$ unter der Abbildung $\R^{2d}\to \R^d, (x,y) \mapsto x+y$ ist.
+\end{note}
+
+\begin{example} Oft bleiben gefaltete Verteilungen (insb. im Fall $d=1$) gleich verteilt. Beispiele hierfür sind:
+\begin{enumerate}
+    \item $\mathcal N(\mu , \sigma ^2 ) * \mathcal N(\nu, \tau^2 ) = \mathcal N(\mu + \nu , \sigma^2 + \tau ^2)$ \hfill (Normalverteilung)
+    \item $\Gamma_{\alpha, \beta} * \Gamma _{\alpha ' , \beta} = \Gamma_{\alpha + \alpha', \beta}$ \hfill (Gammaverteilung)
+    \item $\mathcal B (n,p) *\mathcal B(m,p) = \mathcal B(n+m, p)$\hfill (Binomialverteilung)
+    \item $\mathrm{Poi}(\lambda)*\mathrm{Poi}(\mu) =\mathrm{Poi}(\lambda + \mu) $ \hfill (Poissonverteilung)
+\end{enumerate}
+\end{example}
+
+\begin{definition}[Varianz, Kovarianz] \Theorem
+    Es seien $X, Y \in L^2(\P)$ reelle ZV. Dann definieren wir
+    \begin{itemize}[label=--]
+        \item \emph{Varianz} $\V X = \E\left((X - \E X)^2\right)$. Standardnotation $\V X = \sigma_X^2 = \sigma^2$.
+        \item \emph{Kovarianz} $\Cov(X,Y) = \E\left((X - \E X)(Y - \E Y)\right)$.
+    \end{itemize}
+\end{definition}
+
+\begin{lemma}
+    Es seien $X, Y \in L^2(\P)$ reelle ZV. Dann gilt
+    \begin{enumerate}[label=\alph*)]
+        \item $\V X = \E(X^2) - (\E X)^2 \in [0, \infty)$;
+        \item $\V X \le \E\left((X-a)^2\right)$, d.\,h. $a = \E X$ minimiert $a \mapsto \E\left((X-a)^2\right)$.
+        \item $\V(aX+b) = a^2 \V X$, $a, b \in \R$.
+        \item $\Cov(X,Y) = \E(XY) - \E X \E Y = \Cov(Y,X)$ und $\Cov(X,X) = \V X$.
+        \item $\V(X+Y) - \V(X-Y) = 4\Cov(X,Y)$.
+        \item $\V(X+Y) = \V X + \V Y - 2\Cov(X,Y)$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{theorem}[Bienaymé] \Theorem
+    Es seien $X_1, \dots, X_n: \Omega \to \R$ paarweise unkorrelierte ZV in $L^2(\P)$, d.\,h. $\E(X_i X_k) = \E X_i \E X_k \iff \Cov(X_i, X_k) = 0$ für $i \ne k$. Dann gilt
+    $$\V\left(\sum_{i=1}^n X_i\right) = \sum_{i=1}^n \V X_i.$$
+\end{theorem}
+
+
+\newpage
+
+\section{Zufallsvariablen}
+\subsection{Konstruktion von unabhängigen Zufallsvariablen}
+
+
+Sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum. 
+
+\begin{lemma}[Inverse Verteilungsfunktion]
+    Es sei $F$ eine Verteilungsfunktion. Dann hat $F$ eine eindeutig bestimmte verallgemeinerte, monoton wachsende rechtsstetige Inverse:
+    $$F^{-1}(s) = G(s) = \inf\{t \mid F(t) > s\}.$$
+    Für beliebige $s \in [0,1]$ und $t \in \R$ gilt
+    \begin{enumerate}[label=\alph*)]
+        \item $F(t) \ge s \iff G(s-) \le t$;
+        \item $F(G(s)) \ge s$ und wenn $F$ an der Stelle $t = G(s)$ stetig ist, dann ist $F(G(s)) = s$;
+        \item $G(F(t)) \ge t$ und wenn $G$ an der Stelle $s = F(t)$ stetig ist, dann ist $G(F(t)) = t$.
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{corollary}
+    Zu jeder Verteilungsfunktion $F: \R \to [0,1]$ existiert ein W-Raum $(\Omega, \A, \P)$ und eine ZV $X: \Omega \to \R$, so daß
+    $$\P(X \le t) = F(t) \quad \forall t \in \R$$
+    gilt.
+\end{corollary}
+
+\begin{corollary}
+    Zu zwei W-Räumen $(\Omega, \A, \P), (\Omega', \A' \P')$ existieren zwei unabhängige Zufallsvariablen $X, Y$ mit $\P_{X,Y} = \P_X \otimes P'_Y$
+\end{corollary}
+
+\begin{definition}
+    Für $\emptyset \ne K \subset I$ ist
+    $$\Omega_K := \bigtimes_{i \in K} \Omega_i := \left\{ f: K \to \bigcup_{i\in K} \Omega_i \; \middle| \; f(i) \in \Omega_i \; \forall i \in K \right\}$$
+    das Produkt der $(\Omega_i)_{i \in K}$. Weitere Bezeichnungen ($K \subset J \subset I$):
+    \begin{itemize}[label=--]
+        \item $i$-te Koordinate von $f \in \Omega_K$: $\quad f(i)$;
+        \item Koordinatenprojektion $\pi_i: \Omega_I \to \Omega_i, \; f \mapsto f(i)$, $i \in I$;
+        \item $\pi_i^K: \Omega_K \to \Omega_i, \; f \mapsto f(i)$, $i \in K$;
+        \item Projektion auf $\Omega_K$: $\quad \pi_K^J: \Omega_J \to \Omega_K, \; f \mapsto f|_K$;
+        \item $\pi_K := \pi_K^I: \Omega_I \to \Omega_K$;
+        \item endliche Indexmengen $\mathscr{H} := \mathscr{H}(I) := \{K \subset I \mid 0 < |K| < \infty\}$.
+    \end{itemize}
+    Für $\emptyset \ne K \subset L \subset J \subset I$ gilt insbesondere
+    $$\pi_i^K = \pi_{\{i\}}^K, \quad \pi_i = \pi_{\{i\}}^I, \quad \text{und} \quad \pi_K^J = \pi_K^L \circ \pi_L^J.$$
+\end{definition}
+\begin{definition}[Unendliches Produkt von Sigma-Algebren]
+    Das unendliche Produkt $\A_I := \bigotimes_{i \in I} \A_i$ der $\sigma$-Algebren $(\A_i)_{i\in I}$ ist definiert als
+    $$\A_I := \sigma(\pi_i, \, i \in I) = \sigma\left(\pi_i^{-1}(\A_i), \, i \in I\right).$$
+\end{definition}
+
+\begin{theorem}[Kolmogorov]\Theorem
+    Es seien $(\Omega_i, \A_i, \P_i)_{i\in I}$ beliebig viele W-Räume. Dann existiert auf $(\Omega_I, \A_I)$ genau ein W-Maß $\P = \P_I$ mit der Eigenschaft, daß
+    $$\forall H \in \mathscr H: \quad \pi_H(\P) = \P_H = \bigotimes_{i\in H} \P_i \quad \text{(endliches Produkt)}.$$
+    Das Maß $\P$ heißt \emph{unendliches Produkt} der Maße $(\P_i)_{i\in I}$: $\P = \bigotimes_{i\in I} \P_i$.
+\end{theorem}
+
+\begin{corollary}
+    Es seien $X_i: \Omega \to E$, $i \in I$, ZV, die auf demselben W-Raum $(\Omega, \A, \P)$ definiert sind. Dann gilt
+    $$(X_i)_{i\in I} \text{ unabhängig} \quad \iff \quad \underbrace{\underbrace{\P_{(X_i)_{i\in I}}}_{\text{gemeinsame Verteilung}} = \underbrace{\bigotimes_{i\in I} \P_{X_i}}_{\text{Produktmaß}}}_{\text{Maße auf } (E_I, \mathscr E_I)}$$
+\end{corollary}
+
+\begin{corollary}[3. Blocklemma] \Theorem
+    Es seien $X_i: (\Omega, \A) \to (\Omega_i, \A_i)$, $i \in I$, unabhängige ZV, $I = \bigsqcup_{k \in K} I_k$ eine beliebige Partition von $I$, und
+    $$f_k: \left( \bigtimes_{i\in I_k} \Omega_i, \; \bigotimes_{i\in I_k} \A_i \right) \to (E_k, \mathscr{E}_k), \quad k \in K,$$
+    meßbare Abbildungen. Dann sind die ZV
+    $$f_k\left((X_i)_{i\in I_k}\right): \Omega \to E_k, \quad k \in K,$$
+    unabhängig.
+\end{corollary}
+
+\begin{note}
+    Mit dem 3. Blocklemma erweitert sich die Aussage von \ref{2. Blocklemma} auf beliebig viele (insbesondere auch überabzählbar viele) Zufallsvariablen $(X_i)_{i \in I}$. Die Unabhängigkeit geht dabei unter den gegebenen Voraussetzungen -- getragen von der Existenz unendlicher Produktmaße nach \ref{Kolmogorov} -- auch bei beliebiger Verkettung/Blockbildung nicht verloren.
+\end{note}
+
+
+\subsection{Charakteristische Funktionen}
+
+Sei $(\Omega,\A, \P)$ ein Wahrscheinlichkeitsraum. 
+\begin{definition}[Charakteristische Funktion] \Theorem
+    Es sei $X: \Omega \to \R^d$ eine ZV. Die Funktion $\phi_X: \R^d \to \C$
+    $$\phi_X(\xi) := \E e^{i\langle \xi, X\rangle} = \int_{\R^d} e^{i\langle \xi, x\rangle} \, \P(X \in dx), \qquad \xi \in \R^d$$
+    heißt \emph{charakteristische Funktion} von $X$.
+\end{definition}
+
+\begin{example}[Wichtige CF] \Theorem \mbox{}
+    \begin{enumerate}[label=\alph*)]
+        \item \textbf{Degenerierte Verteilung.} $X \sim \delta_c$, d.h. $X \equiv c$ ist fast sicher konstant. Dann ist
+        $$\E e^{i\xi X} = e^{ic\xi}, \qquad \xi \in \R.$$
+
+        \item \textbf{Bernoulliverteilung.} $X \sim B(p) = p\delta_1 + q\delta_0$. Dann gilt
+        $$\E e^{i\xi X} = p e^{i\xi \cdot 1} + q e^{i\xi \cdot 0} = q + p e^{i\xi}, \qquad \xi \in \R.$$
+
+        \item \textbf{Zweipunktverteilung.} $X \sim p\delta_a + q\delta_b$, $a, b \in \R$. Dann gilt
+        $$\E e^{i\xi X} = p e^{ia\xi} + q e^{ib\xi}, \qquad \xi \in \R.$$
+        Für $p = q = \frac{1}{2}$ und $b = -a$ erhalten wir insbesondere $\E e^{i\xi X} = \cos(a\xi)$.
+
+        \item \textbf{Poissonverteilung.} $X \sim \text{Poi}(\lambda)$, d.h. $\P(X = n) = e^{-\lambda} \lambda^n/n!$, $n \in \N_0$, wobei $X$ nur Werte in $\N_0$ annimmt. Es gilt $$\E e^{i\xi X} = \exp\left[-\lambda(1 - e^{i\xi})\right], \quad \xi \in \R$$. 
+
+        \item \textbf{Gleichverteilung auf $[a,b]$.} $X \sim U[a,b]$, d.h. $X$ hat die Dichte $(b-a)^{-1} \1_{[a,b]}(x)$. Es gilt
+        $$\E e^{i\xi X} = \frac{1}{b-a} \int_a^b e^{i\xi x} \, dx = \frac{e^{ib\xi} - e^{ia\xi}}{i\xi(b-a)}, \qquad \xi \in \R.$$
+        Für $a=-1, b=1$ erhalten wir insbesondere $\E e^{i\xi X} = \dfrac{\sin \xi}{\xi}$.
+
+        \item \textbf{(Einseitige) Exponentialverteilung.} $X \sim \text{Exp}(\lambda)$, $\lambda > 0$, d.h. $X$ hat die Dichte $\lambda e^{-\lambda x} \1_{[0,\infty)}(x)$. Es gilt
+        $$\E e^{i\xi X} = \lambda \int_0^{\infty} e^{i\xi x} e^{-\lambda x} \, dx = \frac{\lambda}{\lambda - i\xi}, \qquad \xi \in \R.$$
+    \end{enumerate}
+\end{example}
+
+\begin{lemma}[Charakt. Fn. der Standardnormalverteilung] \Theorem
+    Es sei $G \sim N(0,1)$ eine standard-normalverteilte ZV. Die charakteristische Funktion ist
+    $$\E e^{i\xi G} = \frac{1}{\sqrt{2\pi}} \int_{\R} e^{i\xi x} e^{-x^2/2} \, dx = e^{-\xi^2/2}, \qquad \xi \in \R.$$
+\end{lemma}
+
+\begin{theorem}[Eigenschaften der charakteristischen Funktion]\Theorem
+    Es sei $X: \Omega \to \R^d$ eine ZV. Die charakteristische Funktion $\varphi_X(\xi) := \E e^{i\langle \xi, X\rangle}$ hat folgende Eigenschaften.
+    \begin{enumerate}[label=\alph*)]
+        \item $\xi \mapsto \varphi_X(\xi)$ ist stetig.
+        \item $|\varphi_X(\xi)| \le \varphi_X(0) = 1$.
+        \item $\varphi_{-X}(\xi) = \varphi_X(-\xi) = \overline{\varphi_X(\xi)}$.
+        \item $\Re [\varphi_X(\xi)] = \E\left[\cos\langle \xi, X\rangle\right]$ ist die charakteristische Funktion der ZV $Y = \epsilon X$, wobei $\epsilon \sim \frac{1}{2}\delta_1 + \frac{1}{2}\delta_{-1}$ und $X$ unabhängig sind.
+        \item $|\varphi_X|^2$ ist die charakteristische Funktion der ZV $Y = X - \widetilde{X}$, wobei $\widetilde{X} \sim X$ und $X, \widetilde{X}$ unabhängige ZV sind.
+        
+        \item Wenn $\E(|X|^n) < \infty$ für ein $n \in \N$, dann existiert $\partial^\alpha \varphi_X$ für alle $\alpha \in \N_0^d$ mit $|\alpha| \le n$. Weiterhin ist $\partial^\alpha \varphi_X$ stetig und es gilt
+        $$\E(X^\alpha) = i^{-|\alpha|} \, \partial^\alpha \varphi_X(0).$$
+
+        \item Wenn $\varphi_X$ $2m$-mal an der Stelle $\xi = 0$ differenzierbar ist, dann ist $\E(|X|^n) < \infty$ für alle $n \le 2m$. Insbesondere ist dann $\varphi_X \in C^{2m}(\R^d)$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Die Charakteristische Funktion charakterisiert] \Theorem
+    Es seien $(\Omega, \A, \P)$, $(\Omega', \A', \P')$ zwei W-Räume, auf denen ZV $X: \Omega \to \R^d$ und $X': \Omega' \to \R^d$ definiert sind. Genau dann gilt $X \sim X'$, wenn $X$ und $X'$ die gleiche charakteristische Funktion haben: $\varphi_X \equiv \varphi_{X'}$.
+\end{theorem}
+
+\begin{corollary}[Satz von Kac] \Theorem
+    Es seien $X, Y: \Omega \to \R^d$ zwei ZV, die auf demselben W-Raum definiert sind. Es gilt $X \perp\!\!\!\perp Y$ genau dann, wenn
+    $$\E e^{i\langle \xi, X\rangle + i\langle \eta, Y\rangle} = \E e^{i\langle \xi, X\rangle} \cdot \E e^{i\langle \eta, Y\rangle} \qquad \forall \xi, \eta \in \R^d.$$
+\end{corollary}
+
+\begin{theorem}[Umkehrformel] \Theorem
+    Es sei $X: \Omega \to \R^d$ eine ZV, deren charakteristische Funktion $\varphi_X \in L^1(d\xi)$ integrierbar ist. Dann gilt $X \sim p_X(x) \, dx$, und die Dichte ist durch folgende Formel gegeben:
+    $$p_X(x) = (2\pi)^{-d} \int_{\R^d} \varphi_X(\xi) \, e^{-i\langle \xi, x\rangle} \, d\xi, \qquad x \in \R^d.$$
+\end{theorem}
+
+\newpage
+
+
+\section{Konvergenz und Grenzverhalten}
+Sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum.
+\subsection{Konvergenz von Zufallsvariablen}
+\begin{definition}[Konvergenzarten] \Theorem
+    Die ZV $X, X_n: \Omega \to \R$, $n \in \N$, seien auf demselben W-Raum $(\Omega, \A, \P)$ definiert.
+    \begin{enumerate}[label=\alph*)]
+        \item $X_n$ konvergiert gegen $X$ \emph{fast sicher}, wenn
+        $$\P\left(\{\omega \in \Omega \mid \lim_{n \to \infty} X_n(\omega) = X(\omega)\}\right) = 1.$$
+        Notation: $\lim_{n \to \infty} X_n = X$ f.s., $X_n \xrightarrow{\text{f.s.}} X$.
+
+        \item $X_n$ konvergiert gegen $X$ \emph{in $L^p$}, $1 \le p \le \infty$, oder \emph{im $p$-ten Mittel}, wenn
+        $$X_n, X \in L^p(\P) \quad \text{und} \quad \lim_{n \to \infty} \|X_n - X\|_{L^p} = 0.$$
+        Notation: $L^p\text{-}\lim_{n \to \infty} X_n = X$, $X_n \xrightarrow{L^p} X$.
+
+        \item $X_n$ konvergiert gegen $X$ \emph{stochastisch} oder \emph{in Wahrscheinlichkeit}, wenn
+        $$\forall \epsilon > 0: \lim_{n \to \infty} \P(|X_n - X| > \epsilon) = 0.$$
+        Notation: $\P\text{-}\lim_{n \to \infty} X_n = X$, $X_n \xrightarrow{\P} X$.
+        \item $X_n$ konvergiert gegen $X$ \emph{schwach} oder \emph{in Verteilung}, wenn
+        $$\forall f \in C_b(\R): \lim_{n \to \infty} \E f(X_n) = \E f(X).$$
+        Notation: $X_n \xrightarrow{d} X$, $X_n \Rightarrow X$ oder $\P_{X_n} \xrightarrow{w} \P_X$.
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    Die Limiten in \ref{Konvergenzarten} sind eindeutig (und damit wohldefiniert):
+    $$X_n \xrightarrow{\text{f.s.}/L^p/\P} X \; \quad \& \quad \; X_n \xrightarrow{\text{f.s.}/L^p/\P} Y \quad \Longrightarrow \quad X = Y \text{ f.s.}$$ sowie
+    $$X_n \xrightarrow{\; \  d \; \ } X \; \quad \& \quad\; X_n \xrightarrow{\; \  d \; \ } Y \quad \Longrightarrow \quad X \sim Y$$
+\end{lemma}
+
+
+\begin{lemma}[Konvergenzimplikationen] \Theorem
+    Für die ZV $X_n, X: \Omega \to \R$, $n \in \N$, und $1 \le p \le \infty$ gilt
+
+\begin{center}
+\begin{tikzpicture}
+    \node (Lp) at (0,2)   {$X_n \xrightarrow{L^p} X$};
+    \node (fs) at (4,2)   {$X_n \xrightarrow{\text{f.s.}} X$};
+    \node (L1) at (0,0.5)   {$X_n \xrightarrow{L^1} X$};
+    \node (P)  at (2,-1)  {$X_n \xrightarrow{\P} X$};
+    \node (d) at (2, -2.5)  {$X_n \xrightarrow{d}X$};
+    
+    \draw[-{Implies},double distance=1.5pt,thick] (Lp) -- (L1);
+    \draw[-{Implies},double distance=1.5pt,thick] (L1) -- (P);
+    \draw[-{Implies},double distance=1.5pt,thick] (fs) -- (P);
+    \draw[-{Implies},double distance=1.5pt,thick] (P) -- (d);
+\end{tikzpicture}
+\end{center}
+\end{lemma}
+
+\begin{lemma}[">schnelle"< stoch. Konv. --> f.s. Konv.]
+    Es seien $X_n, X: \Omega \to \R$ ZV, so dass $X_n \xrightarrow{\P} X$, und für eine Nullfolge $\epsilon_n \downarrow 0$ gelte $\sum_{n=0}^{\infty} \P(|X_n - X| > \epsilon_n) < \infty$. Dann folgt $X_n \xrightarrow{\text{f.s.}} X$.
+\end{lemma}
+
+\begin{corollary}
+    Es seien $X_n, X: \Omega \to \R$ ZV. Wenn $X_n \xrightarrow{\P} X$, dann existiert eine Teilfolge $(X_{n(k)})_k \subset (X_n)_n$ mit $X_{n(k)} \xrightarrow[k \to \infty]{\text{f.s.}} X$.
+\end{corollary}
+
+
+\begin{lemma}
+    Es seien $X_n, X: \Omega \to \R$ ZV, die auf demselben (!) W-Raum definiert sind. Wenn $X$ f.s. konstant ist, $X \equiv c$, dann gilt
+    $$X_n \xrightarrow{\P} X \equiv c \quad \Longleftrightarrow \quad X_n \xrightarrow{d} X \equiv c.$$
+\end{lemma}
+
+\begin{theorem}[Konvergenz in Verteilung]
+    Es seien $X_n, X$ reelle ZV, die nicht auf demselben W-Raum definiert sein müssen. Dann gilt
+    $$X_n \xrightarrow{d} X \implies F_{X_n}(x) \xrightarrow[n \to \infty]{} F_X(x) \quad \text{für alle Stetigkeitsstellen } x \text{ von } F_X.$$
+\end{theorem}
+
+\begin{example}[Gegenbeispiele]\Theorem \mbox{}
+\begin{enumerate}[label= \alph*)]
+\item $L^1$-Konvergenz $\cancel{\implies}$ $L^p$-Konvergenz ($p > 1$).
+        $$X_n(\omega) = \1_{[1/n, 1)}(\omega) \, \omega^{-1/p}, \qquad X(\omega) = \omega^{-1/p}.$$
+ \item $L^1$-Konvergenz $\cancel\implies$ f.s. Konvergenz.
+        $$X_{n,k}(\omega) = \1_{[k/n, (k+1)/n)}(\omega), \qquad n \in \N, \; k = 0, 1, \dots, n-1.$$
+        lexikografisch, also geordnet $X_{n,1},\dots, X_{n,n-1}, X_{n+1, 1},\dots$. Offensichtlich $X(\omega) \equiv 0$ in $L^1$, aber $X_{n,k}(\omega)$ konvergiert an keinem Punkt $\omega$
+\item Stochastische Konvergenz $\cancel\implies$ $L^1$-Konvergenz.
+        $$X_n(\omega) = n \, \1_{[0,1/n]}(\omega), \qquad X(\omega) \equiv 0.$$
+\item Stochastische Konvergenz $\cancel\implies$ f.s. Konvergenz. Siehe Beispiel b).
+
+\item Schwache Konvergenz $\cancel\implies$ stochastische Konvergenz \newline
+Die Rademacher-Funktionen $R_n \sim \frac{1}{2}\delta_1 + \frac{1}{2}\delta_{-1}$ erfüllen $R_n \xrightarrow{d} R_1$, da $\E f(R_n)$ unabhängig von $n$ ist. Sie konvergieren aber nicht f.s. (da $\liminf R_n = -1 < 1 = \limsup R_n$ auf ganz $(0,1)$), und wegen $\P(|R_n - R_k| > \epsilon) = \frac{1}{2}$ für $n \ne k$ auch nicht stochastisch.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Lévy 1925] \Theorem
+    Es seien $X, X_n$ ZV mit Werten in $\R^d$. Dann gilt
+    $$X_n \xrightarrow[n \to \infty]{d} X \quad \Longleftrightarrow \quad \forall \xi \in \R^d: \varphi_{X_n}(\xi) \xrightarrow[n \to \infty]{} \varphi_X(\xi).$$ sogar lokal gleichmäßig.
+\end{theorem}
+
+\subsection{Konvergenz \& Null-Eins Gesetze}
+\begin{theorem}[Borel-Cantelli]\Theorem
+    Es sei $(A_n)_{n \in \N} \subset \A$.
+    \begin{enumerate}[label= \alph*)]
+        \item $\displaystyle\sum_{n=1}^{\infty} \P(A_n) < \infty \Rightarrow \P(\limsup_n A_n) = \P(A_n \text{ für unendlich viele } n) = 0$
+        \item Wenn die $A_n$ paarweise unabhängig sind, dann gilt
+        $$\sum_{n=1}^{\infty} \P(A_n) = \infty \Rightarrow \P(\limsup_{n} A_n) = \P(A_n \text{ für unendlich viele } n) = 1$$
+    \end{enumerate}
+\end{theorem}
+
+ 
+\begin{corollary}
+    Für die ZV $X_n, X: \Omega \to \R$ gilt $X_n \xrightarrow{\text{f.s.}} X$ genau dann, wenn
+    $$\forall \epsilon > 0: \P(|X_n - X| > \epsilon \text{ für unendlich viele } n) = 0.$$
+\end{corollary}
+
+\begin{definition}[Terminale Sigma-Algebra] \Theorem
+    Es sei $(\A_i)_{i \in \N}$ eine Folge von Mengensystemen aus $\A$. Setze
+    $$\mathscr{T}_n := \sigma(\A_n, \A_{n+1}, \dots) = \sigma\left(\bigcup_{i \ge n} \A_i\right), \qquad n \in \N.$$
+    $\mathscr{T}_\infty := \bigcap_{n \in \N} \mathscr{T}_n$ heißt \emph{terminale $\sigma$-Algebra}.
+\end{definition}
+
+\begin{example}
+    Es sei $A_i \in \A_i$, $i \in \N$. Für $n \ge m$ sehen wir, dass $\mathscr{T}_m \supset \mathscr{T}_n$. Daher ist
+    $$\limsup_{i \to \infty} A_i = \bigcap_{n \ge 1} \underbrace{\bigcup_{i \ge n} A_i}_{\in \, \mathscr{T}_n} \overset{\forall m \in \N}{=} \bigcap_{n \ge m} \bigcup_{i \ge n} A_i \in \mathscr{T}_m$$
+    und somit gilt $\limsup_{i \to \infty} A_i \in \bigcap_{m \in \N} \mathscr{T}_m = \mathscr{T}_\infty$.
+\end{example}
+
+
+\begin{theorem}[Kolmogorovsches 0--1--Gesetz]
+    Es seien $(X_n)_{n \in \N}$ unabhängige reelle ZV und
+    $$\mathscr{T}_\infty := \bigcap_{n \in \N} \mathscr{T}_n, \qquad \mathscr{T}_n := \sigma(X_n, X_{n+1}, \dots).$$
+    Für alle $A \in \mathscr{T}_\infty$ gilt $\P(A) = 0$ oder $\P(A) = 1$.
+\end{theorem}
+
+\begin{corollary}
+    Es sei $(X_i)_{i \in \N}$ eine Folge von unabhängigen reellen ZV und $\mathscr{T}_\infty$ die zugehörige terminale $\sigma$-Algebra. Jede ZV $Y$, die bezüglich $\mathscr{T}_\infty$ meßbar ist, ist f.s. konstant.
+\end{corollary}
+
+
+\subsection{Grenzwertsätze}
+
+
+\begin{theorem}[Maximalungleichung; Etemadi 1985] \Theorem
+    Es seien $X_1, \dots, X_n$ unabhängige reelle ZV. Dann gilt
+    $$\P\left(\max_{1 \le k \le n} |S_k| \ge 3t\right) \le 3 \max_{1 \le k \le n} \P(|S_k| \ge t) \qquad \forall t \ge 0.$$
+\end{theorem}
+
+\begin{theorem}[Lévy] \Theorem
+    Es seien $X_1, \dots, X_n$ unabhängige reelle ZV. Dann gilt
+    $$S_n \text{ konvergiert f.s.} \quad \Longleftrightarrow \quad S_n \text{ konvergiert in Wahrscheinlichkeit}.$$
+\end{theorem}
+
+\begin{corollary}[von Kolmogorov]
+    Es seien $(X_i)_{i \in \N} \subset L^2(\P)$ unabhängige reelle ZV. Dann gilt
+    $$\sum_{i=1}^{\infty} \V X_i < \infty \implies \sum_{i=1}^{\infty} (X_i - \E X_i) \text{ konvergiert f.s.}$$
+\end{corollary}
+
+\begin{theorem}[Drei-Reihen-Satz; Kolmogorov]
+    Es seien $(X_i)_{i \in \N}$ unabhängige reelle ZV. Die Reihe $\sum_{i=1}^{\infty} X_i$ konvergiert f.s. genau dann, wenn für ein (oder für alle) $K > 0$ die folgenden drei Reihen konvergieren:
+    $$ i) \ \sum_{i=1}^{\infty} \P(|X_i| > K) \qquad ii) \  \sum_{i=1}^{\infty} \E X_i^K \qquad iii) \  \sum_{i=1}^{\infty} \V X_i^K.$$
+\end{theorem}
+
+\begin{theorem}[Gesetz der kleinen Zahlen] \Theorem
+    Es sei $(X_i)_{i \in \N}$ eine iid Folge von ZV, so dass $\P(X_i = 1) = p$ und $\P(X_i = 0) = q = 1-p$, d.h. $X_i \sim B(p)$. Dann gilt
+    $$S_n = X_1 + \dots + X_n \sim B(n,p) \qquad \text{oder} \qquad \P(S_n = k) = \binom{n}{k} p^k q^{n-k}, \qquad 0 \le k \le n.$$
+\end{theorem}
+
+\begin{theorem}[Poisson-Approximation] \Theorem
+    Auf dem W-Raum $(\Omega, \A, \P)$ seien reelle binomialverteilte ZV $S_n \sim B(n, p_n)$, $n \in \N$, gegeben. Dann gilt
+    $$\lim_{n \to \infty} n p_n = \lambda \in [0, \infty) \quad \Longrightarrow \quad \lim_{n \to \infty} \P(S_n = k) = e^{-\lambda} \frac{\lambda^k}{k!}.$$
+\end{theorem}
+
+\begin{theorem}[Chebyshev; WLLN] \Theorem
+    Es seien $X_i: \Omega \to \R$, $i \in \N$, abzählbar viele paarweise unkorrelierte ZV in $L^2(\P)$. Wenn
+    $$\lim_{n \to \infty} \frac{1}{n^2} \sum_{i=1}^n \V X_i = 0,$$
+    dann genügt $(X_i)_{i \in \N}$ dem \emph{schwachen Gesetz der großen Zahlen (WLLN)}, d.h.
+    $$\underbrace{\lim_{n \to \infty} \P\left(\left| \frac{1}{n} \sum_{i=1}^n (X_i - \E X_i) \right| > \epsilon\right) = 0}_{\text{Konvergenz in Wahrscheinlichkeit}} \qquad \forall \epsilon > 0$$
+    bzw.
+    $$ \frac{1}{n} \sum_{i=1}^n (X_i - \E X_i) \xrightarrow{\quad \P\quad } 0$$
+\end{theorem}
+
+\begin{proof}[Beweisidee]
+    $$\P\left(\left| \frac{1}{n} \sum_{i=1}^n (X_i - \E X_i) \right| > \epsilon\right)
+    = \P\left(\left|\sum_{i=1}^n (X_i - \E X_i)\right|^2 > (n\epsilon)^2\right) $$$$\overset{\ref{Eigenschaften Erwartungswert} j)}{\le} \frac{1}{(n\epsilon)^2} \, \E\left(\left|\sum_{i=1}^n (X_i - \E X_i)\right|^2\right)\overset{\ref{Varianz, Kovarianz}}{=} \frac{1}{(n\epsilon)^2} \, \V\left(\sum_{i=1}^n X_i\right) $$$$\overset{\ref{Bienaymé}}{=} \frac{1}{(n\epsilon)^2} \sum_{i=1}^n \V X_i \xrightarrow{n \to \infty} 0.$$
+\end{proof}
+
+\begin{note}
+    Das schwache Gesetz der großen Zahlen \ref{Chebyshev; WLLN} ist die mathematische Rechtfertigung dafür, Wahrscheinlichkeiten durch relative Häufigkeiten zu approximieren. Die Annahmen von Chebyshev sind allerdings noch nicht optimal. Es folgt die optimale Version in \ref{Khintchin}
+\end{note}
+
+\begin{theorem}[Khintchin] \Theorem
+    Es seien $X_i: \Omega \to \R$, $i \in \N$, abzählbar viele paarweise unabhängige und identisch verteilte ZV in $L^1(\P)$. Dann gilt für die Folge $(X_i)_{i \in \N}$ das WLLN.
+\end{theorem}
+
+\begin{theorem}[DeMoivre; Laplace; CLT]\Theorem
+    Es seien $(X_i)_{i \in \N}$ reelle iid ZV und $X_1 \in L^2(\P)$. Weiter seien $S_n = X_1 + \dots + X_n$, $\mu = \E X_1$ und $\sigma^2 = \V X_1$. Dann gilt
+    $$\lim_{n \to \infty} \P\left(a < \frac{S_n - n\mu}{\sigma\sqrt{n}} \le b\right) = \frac{1}{\sqrt{2\pi}} \int_a^b e^{-x^2/2} \, dx = \Phi(b) - \Phi(a), \qquad a, b \in \R,$$
+    der \emph{zentrale Grenzwertsatz},
+    wobei $\Phi(y) = (2\pi)^{-1/2} \displaystyle\int_{-\infty}^y e^{-x^2/2} \, dx$.
+\end{theorem}
+
+\begin{note}
+    Der zentrale Grenzwertsatz, vermutlich das wichtigste Resultat der klassischen Wahrscheinlichkeitstheorie, zeigt, dass eine normierte Reihe von unabhängigen, identisch verteilten Zufallsvariablen mit endlicher Varianz im Grenzverhalten normalverteilt sind -- unabhängig davon, welche Verteilung die $X_i$ ursprünglich hatten.
+\end{note}
+
+\begin{theorem}[SLLN; Kolmogorov 1933; Etemadi 1981] \Theorem
+    Es seien $(X_i)_{i \in \N} \subset L^1(\P)$ paarweise unabhängige, identisch verteilte reelle ZV. Dann gilt
+    $$\lim_{n \to \infty} \frac{X_1 + \dots + X_n}{n} = \E X_1 \quad \text{f.s.}$$
+\end{theorem}
+
+\begin{note}
+    Das SLLN liefert im Gegensatz zum WLLN \emph{fast sichere} statt nur stochastische Konvergenz des Stichprobenmittels gegen $\E X_1$ -- die theoretische Rechtfertigung der frequentistischen Wahrscheinlichkeitsinterpretation.
+\end{note}
+
+\section{Abhängige Prozesse}
+Sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum.
+\subsection{Bedingte Erwartungen}
+\begin{definition}[Bedingte Erwartung] \Theorem
+    Es sei $\SigF \subset \A$ eine $\sigma$-Algebra und $X \in L^1(\A)$ oder $X \in L^{0,+}_{\R}(\A)$. Die \emph{bedingte Erwartung} von $X$ bezüglich $\SigF$ ist eine $\SigF$-meßbare ZV $X^{\SigF} \in L^1(\SigF)$ oder $X^{\SigF} \ge 0$ mit der Eigenschaft
+    $$\forall F \in \SigF: \int_F X \, d\P = \int_F X^{\SigF} \, d\P.$$ oder äquivalent:
+    $$\forall F\in \SigF :  \E(\1_F X) =\E(\1_F X^\SigF ) $$
+    Wir bezeichnen außerdem mit  
+    $$\E(X|F)= \int X(\omega)\P(d\omega| F) = \frac{\E(\1_F X)}{\P(F)}$$
+    die bedingte Erwartung von $X$ geg. $F\in \A$ und schreiben 
+    $E(X|\SigF) := X^\SigF$. Weiterhin heißt $P(A|\SigF) := \E(\1_A | \SigF)$ \emph{bedingte Wahrscheinlichkeit}.
+    \end{definition}
+
+\begin{theorem}
+    Es sei $\SigF \subset \A$ eine $\sigma$-Algebra und $X \in L^1(\A)$ oder $X \in L^{0,+}_{\R}(\A)$.
+    \begin{enumerate}[label=\alph*)]
+        \item Es seien $X^{\SigF}, Y^{\SigF}$ $\SigF$-meßbare ZV, die \ref{Bedingte Erwartung} erfüllen. \newline Dann gilt $X^{\SigF} = Y^{\SigF}$ f.s.
+        \item $\E(X \mid \SigF)$ existiert.
+    \end{enumerate}
+\end{theorem}
+
+\begin{lemma}[Elementare Eigenschaften]
+    Es seien $X, Y \in L^1(\A)$ oder $X, Y \in L^{0,+}_{\R}(\A)$, $c \in \R$ und $\SigF \subset \A$ eine $\sigma$-Algebra.
+    \begin{enumerate}[label=\alph*)]
+        \item $X \ge 0 \implies \E(X \mid \SigF) \ge 0$; \hfill (positiv) \par
+        $X \equiv c \implies \E(X \mid \SigF) \equiv c$; \hfill (konservativ)
+        \item $\E(X \mid \{\emptyset, \Omega\}) = \E X$;
+        \item $\E\left(\E(X \mid \SigF)\right) = \E X$;
+        \item $\E(aX + bY \mid \SigF) = a\E(X \mid \SigF) + b\E(Y \mid \SigF)$; \hfill (linear) \\
+        ($a, b \in \R$ bzw. $a, b \ge 0$ wenn $X, Y \ge 0$);
+        \item $X \ge Y \implies \E(X \mid \SigF) \ge \E(Y \mid \SigF)$. \hfill (monoton)
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{theorem}[Konvergenzsätze]
+    Es seien $X, X_n$ reelle ZV und $\SigF \subset \A$ eine $\sigma$-Algebra.
+    \begin{enumerate}[label=\alph*)]
+        \item (bed. Beppo Levi) Für $X_n \ge 0$, $X_n \uparrow X$ gilt
+        $$\E(X_n \mid \SigF) \uparrow \E(X \mid \SigF) \quad \text{fast sicher}.$$
+        \item (bed. Fatou) Für $X_n \ge 0$ gilt
+        $$\E\left(\liminf_{n \to \infty} X_n \mid \SigF\right) \le \liminf_{n \to \infty} \E(X_n \mid \SigF) \quad \text{fast sicher}.$$
+        \item (bed. dom. Konvergenz) Wenn $X_n \xrightarrow{\text{f.s.}} X$ und $|X_n| \le Y$ für ein $Y \in L^1(\P)$, dann gilt
+        $$\lim_{n \to \infty} \E(X_n \mid \SigF) = \E\left(\lim_{n \to \infty} X_n \mid \SigF\right) = \E(X \mid \SigF) \quad \text{fast sicher}.$$
+        \item (bed. Jensen) Für $U: \R \to \R$ konvex und $\E|U(X)| < \infty$ gilt
+        $$U\left(\E(X \mid \SigF)\right) \le \E\left(U(X) \mid \SigF\right) \quad \text{fast sicher}.$$
+        Insbesondere gilt für $U(x) = x^p$, $1 \le p < \infty$: $\|\E(X \mid \SigF)\|_{L^p} \le \|X\|_{L^p}$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Besondere Eigenschaften] \Theorem
+    Es sei $X$ eine ZV und $Z$ eine $\SigF$-meßbare ZV, so dass entweder $X, XZ \in L^1(\A)$ oder $X, Z \ge 0$.
+    \begin{enumerate}[label=\alph*)]
+        \item (pull out) $\E(ZX \mid \SigF) = Z \E(X \mid \SigF)$.
+        \item (tower property) Wenn $\SigG \subset \SigF \subset \A$ $\sigma$-Algebren sind, dann ist
+        $$\E\left[\E(X \mid \SigF) \mid \SigG\right] = \E(X \mid \SigG).$$
+        \item (Projektion) Für $X \in L^2(\A)$ und $Y \in L^2(\SigF)$ gilt
+        $$\E\left[(X - \E(X \mid \SigF))^2\right] \le \E\left[(X - Y)^2\right].$$
+    \end{enumerate}
+\end{theorem}
+
+\begin{lemma}
+    Es seien $X, Y \in L^1(\A)$ oder $X, Y \in L^{0,+}_{\R}(\A)$ und $\SigF = \sigma(\SigG) \subset \A$; weiter sei $\SigG$ $\cap$-stabil und enthalte eine Folge $(G_i)_{i \in \N} \subset \SigG$, $G_i \uparrow \Omega$, so dass $\int_{G_i} |X| \, d\P < \infty$ und $\int_{G_i} |Y| \, d\P < \infty$ für alle $i \in \N$. Dann sind folgende Aussagen äquivalent:
+    \begin{enumerate}[label=\alph*)]
+        \item $\forall F \in \SigF: \displaystyle\int_F X \, d\P = \int_F Y \, d\P$;
+        \item $\forall G \in \SigG: \displaystyle\int_G X \, d\P = \int_G Y \, d\P$.
+    \end{enumerate}
+    Insbesondere benötigen wir (14.3) nur auf einem »gutartigen« Erzeuger.
+\end{lemma}
+
+\begin{example}\label{Bsp.1}
+    Sei $X$ eine ZV und $\bigsqcup _{i\in I}F_i = \Omega $ eine disjunkte Zerlegung des Grundraums, $F_i \in \A, \ I\subset \N$. Dann ist $\SigF := \sigma(F_i)_{i\in I} = \{ \bigsqcup_{j\in J} F_j\ | \ J\subset I\}$ und 
+    $$\E(X| \SigF) = \sum_{i\in I} \1_{F_i} \E(X|F_i)$$
+\end{example}
+
+\begin{theorem}
+    Es seien $X, Y$ reelle ZV und $\SigF, \SigG \subset \A$ $\sigma$-Algebren.
+    \begin{enumerate}[label=\alph*)]
+        \item Für $X \in L^1(\A)$ oder $X \ge 0$ gilt: $X \perp\!\!\!\perp \SigF \implies \E(X \mid \SigF) = \E X$.
+        \item Für $X \in L^1(\A)$ oder $X \ge 0$ gilt: $X, \SigG \perp\!\!\!\perp \SigF \implies \E(X \mid \SigG, \SigF) = \E(X \mid \SigG)$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{example}
+    Wenn $Y: \Omega \to \{y_1, y_2, \dots\}$ eine diskrete ZV ist, dann ist
+    $$\E(X \mid Y = y) = \E(X \mid \{Y = y\}) = \begin{cases} \dfrac{\E(X \1_{\{y\}}(Y))}{\P(Y=y)}, & \P(Y=y) > 0, \\[2mm] 0, & \P(Y=y) = 0, \end{cases}$$
+    vgl. Beispiel \ref{Bsp.1} mit $\SigG = \sigma(\{Y = y_i\}, i \in \N)$. Für nicht diskrete Probleme gilt diese Beziehung nicht mehr.
+\end{example}
+
+\subsection{Martingale}
+
+\begin{definition}[Filtration]
+    Eine Filtration ist eine aufsteigende Familie von $\sigma$-Algebren $(\SigF_t)_{t \in I}$, $\SigF_t \subset \A$, d.h.
+    $$\forall s, t \in I, s \le t: \SigF_s \subset \SigF_t.$$
+    Wir schreiben $\SigF_\infty := \sigma\left(\bigcup_{t \in I} \SigF_t\right)$.
+\end{definition}
+
+
+\begin{definition}[Martingale] \Theorem
+    Es sei $(X_t)_{t \in I}$ eine Familie von ZV und $(\SigF_t)_{t \in I}$ eine Filtration. Wenn
+    \begin{enumerate}[label=\alph*)]
+        \item $(X_t)_{t \in I}$ an $(\SigF_t)_{t \in I}$ adaptiert ist,
+        \item $\E|X_t| < \infty$ für alle $t \in I$ gilt,
+        \item $\E(X_t \mid \SigF_s) = X_s$ für alle $s \le t$, $s, t \in I$ gilt,
+    \end{enumerate}
+    dann heißt $(X_t, \SigF_t)_{t \in I}$ \emph{Martingal}. Gilt stattdessen
+    \begin{enumerate}[label=c\arabic*)]
+        \setcounter{enumii}{0}
+        \item[c')] $\E(X_t \mid \SigF_s) \ge X_s$ für alle $s \le t$, $s, t \in I$, dann heißt $(X_t, \SigF_t)_{t \in I}$ \newline \emph{Submartingal}.
+        \item[c'')] $\E(X_t \mid \SigF_s) \le X_s$ für alle $s \le t$, $s, t \in I$, dann heißt $(X_t, \SigF_t)_{t \in I}$ \newline \emph{Supermartingal}.
+    \end{enumerate}
+\end{definition}
+
+\begin{note}
+    Ein Submartingal ">wächst"<, ein Supermartingal ">fällt"<.
+\end{note}
+
+\begin{lemma}
+    Es seien $\xi_1, \dots, \xi_n$ reelle ZV und $X_k = \xi_1 + \dots + \xi_k$. Dann gilt
+    $$\sigma(\xi_1, \dots, \xi_n) = \sigma(X_1, \dots, X_n).$$
+\end{lemma}
+
+\begin{example}
+    Es sei $(\Omega, \A, \P)$ ein Wahrscheinlichkeitsraum.
+    \begin{enumerate}[label=\alph*)]
+        \item Es sei $(a_n)_{n \in \N_0} \subset \R$ eine monoton wachsende Folge. Dann ist $(X_n)_{n \in \N_0} \equiv (a_n)_{n \in \N_0}$ ein Submartingal bezüglich jeder Filtration in $(\Omega, \A, \P)$.
+        \item \textbf{Random Walk/Summenmartingal.} Es sei $(\xi_i)_{i \in \N} \subset L^1(\A)$ eine Folge von integrierbaren iid ZV und $\SigF_n = \sigma(\xi_1, \dots, \xi_n)$. Dann gilt für die Folge der Partialsummen $X_n = \xi_1 + \dots + \xi_n$, $X_0 := 0$, $\SigF_0 := \{\emptyset, \Omega\}$
+        $$X_n \text{ ist ein } \begin{cases} \text{Martingal} & \Longleftrightarrow \; \E \xi_1 = 0; \\ \text{Submartingal} & \Longleftrightarrow \; \E \xi_1 \ge 0; \\ \text{Supermartingal} & \Longleftrightarrow \; \E \xi_1 \le 0. \end{cases}$$
+        Das folgt sofort aus
+        $$\E(X_n \mid \SigF_{n-1}) = \E(X_{n-1} + \xi_n \mid \SigF_{n-1}) = \underbrace{\E(X_{n-1} \mid \SigF_{n-1})}_{\SigF_{n-1}\text{-mb.}} + \underbrace{\E(\xi_n \mid \SigF_{n-1})}_{\xi_n \perp\!\!\!\perp \SigF_{n-1}} = X_{n-1} + \E\xi_n.$$
+        \item \textbf{Produktmartingal.} Es sei $(\xi_i)_{i \in \N}$ eine Folge von positiven iid ZV mit $\E \xi_1 = 1$ und $\SigF_n = \sigma(\xi_1, \dots, \xi_n)$. Dann ist $X_n = \prod_{i=1}^n \xi_i$, $X_0 = 1$, $\SigF_0 = \{\emptyset, \Omega\}$ ein Martingal:
+        $$\E(X_n \mid \SigF_{n-1}) = \E(X_{n-1} \cdot \xi_n \mid \SigF_{n-1}) \overset{\text{pull out}}{=} X_{n-1} \underbrace{\E(\xi_n \mid \SigF_{n-1})}_{\xi_n \perp\!\!\!\perp \SigF_{n-1}} = X_{n-1} \E \xi_n = X_{n-1}.$$
+    \end{enumerate}
+\end{example}
+
+
+\newpage
+
+\subsection*{Beweistaktiken}
+\subsubsection{Konvergenzen}
+\begin{enumerate}
+    \item $\P$- Konvergenz löst meist das WLLN \ref{Chebyshev; WLLN}
+    \item $L^1$- Konvergenz löst meist die Cauchy-Schwarz-Ungleichung \ref{Eigenschaften Erwartungswert} g) für $p=q=2$ und $Y\equiv 1$ $(\E X\leq \sqrt{\E|X|^2})$, falls die Varianzen gegen 0 konvergieren.
+    \item f.s.- Konvergenz löst meist das SLLN \ref{SLLN; Kolmogorov 1933; Etemadi 1981}
+    \item $d$-Konvergenz löst man mit der char. Funktion \ref{Lévy 1925}
+    \item Gesetz der kleinen Zahlen:  Begründung für die Poisson-Approximation ist immer $n\gg 1$ und $0<p\ll1$, aber $n\cdot p_n \xrightarrow{n\to \infty}\lambda $
+\end{enumerate}
+\PropertyNotice
+
+
+
+
+
+
+
+\end{document}

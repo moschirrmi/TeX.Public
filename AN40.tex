@@ -1,0 +1,993 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[style=script-v1, privacy=anonym]{../tools/library}
+
+\renewcommand{\Lecturer}{Prof. S. Neukamm}
+\begin{document}
+\head{AN40: Differentialgleichungen \& Mannigfaltigkeiten}{Wintersemester 2025/2026}
+
+\tableofcontents
+
+
+
+
+
+\newpage
+\section{Gewöhnliche Differentialgleichungen}
+
+\vspace{0.3cm} \par \subsection{Grundlagen}
+
+
+ \begin{definition} \Xlabel{Definition}{subsub}{Anfangswertprobleme (AWP)}
+
+Ein \emph{Anfangswertproblem (AWP) $n$-ter Ordnung} auf einem Intervall $I\subset \R$ ist
+\[
+\quad \begin{cases}y^{(n)}(t)=f(t,y(t),\dots, y^{(n-1)}(t))\\ y^{(j)}(t_0)=y_j, \qquad 0\leq j\leq n-1\end{cases}
+\]
+wobei $f: I\times U_1 \times \dots \times U_{n-1}\to\R^d$ (mit $U_i\subset\R^d$ offen) gegeben ist. 
+\end{definition}
+
+\begin{note} \label{AWP} Ein AWP höherer Ordnung lässt sich durch Einführung von Zustandsvariablen auf ein äquivalentes System erster Ordnung reduzieren. Deshalb reicht es, Anfangswertprobleme 1. Ordnung der Form 
+
+$$ (*)\quad \begin{cases}y'(t)=f(t,y(t))\\ y(t_0)=y_0 \end{cases} $$
+
+zu studieren.
+\end{note}
+ \begin{example}
+Reduktion: $y''+p(t)y'+q(t)y=r(t)$ mit $y_1=y,\; y_2=y'$ $\Rightarrow$ System
+\[
+\begin{pmatrix}y_1\\y_2\end{pmatrix}'=
+\begin{pmatrix}0&1\\-q(t)&-p(t)\end{pmatrix}
+\begin{pmatrix}y_1\\y_2\end{pmatrix}+
+\begin{pmatrix}0\\r(t)\end{pmatrix}.
+\]
+\end{example}
+
+ \begin{definition}
+Eine Funktion $y:I\to\R^d$ heißt \emph{Lösung} des AWP, falls $y$  n-mal (stetig) differenzierbar ist und die Gleichung in $(*)$ sowie Anfangsbedingung erfüllt.
+\end{definition}
+
+
+
+\vspace{0.3cm} \par \subsection{Existenz und Eindeutigkeit}
+ \begin{theorem}\Xlabel{Satz}{subsub}{Peano}
+Sei $(*)$ wie in \ref{AWP}. Sei $f$ stetig auf einer Umgebung von $(t_0,y_0)$. Dann existiert mindestens eine lokale Lösung $y: J \to \R^d $ des AWP auf einem Intervall $J$ um $t_0$.
+\end{theorem}
+
+ \begin{note}
+Peano garantiert lediglich Existenz — Eindeutigkeit braucht stärkere Annahmen. 
+\end{note}
+
+
+ \begin{theorem}\Xlabel{Satz}{subsub}{Picard--Lindelöf}
+Sei $(*)$ ein AWP und $f(t,y)$ auf einem Rechteck $R=[t_0-h,t_0+h]\times B_r(y_0)$ stetig und lokal Lipschitz in $y$ (d.\,h. $\exists L$ mit $\|f(t,y)-f(t,z)\|\le L\|y-z\|$). Dann existiert eine eindeutige Lösung des AWP auf einem Intervall $I\subset R$; sie entsteht als Fixpunkt der Picard-Iteration
+\[
+y_{n+1}(t)=y_0+\int_{t_0}^t f(s,y_n(s))\,ds.
+\]
+\end{theorem}
+
+ \begin{corollary}
+Stetige Abhängigkeit der Lösung vom Anfangswert: Kleine Änderungen in $y_0$ führen (lokal) zu kleinen Änderungen der Lösung (abschätzbar durch Gronwall).
+\end{corollary}
+
+
+
+\vspace{0.3cm} \par \subsection{Maximale Lösungen und Fortsetzbarkeit}
+ \begin{definition} \label{def:max-Forsetzbarkeit}
+Eine Lösung $y:I_{\max}\to\R^d$ heißt \emph{maximal}, falls für alle Lösungen $\hat{y}: \hat{I} \to \R^d$ des AWP gilt: $\hat{I}\subset I_{\max}$ 
+\end{definition}
+
+
+ \begin{theorem}
+Unter den Picard-Annahmen besitzt jedes AWP genau eine lokale Lösung; diese besitzt eine eindeutige maximale Fortsetzung. Entweder ist das maximale Intervall unbeschränkt, oder die Lösung läuft auf den Rand der Definitionsmenge zu (Blow-up).
+\end{theorem}
+
+
+\vspace{0.3cm} \par \subsection{Abschätzungen und Stabilität}
+
+ \begin{lemma}\Xlabel{Lemma}{subsub}{von Gronwall}
+Sei $I = [t_0,t_1)$ und seien $\alpha,\beta \in C(I;\R)$.
+\begin{enumerate}
+\item (Differentielle Form) Ist $y \in C^1(I;\R)$ und erfüllt
+\[
+y'(t) \le \alpha(t) + \beta(t)\,y(t)
+\quad \text{für alle } t \in (t_0,t_1),
+\]
+so gilt für alle $t \in I$
+\[
+y(t) \le y(t_0)\,e^{\int_{t_0}^{t} \beta(s)\,ds}
++ \int_{t_0}^{t} \alpha(s)\,
+e^{\int_{s}^{t} \beta(r)\,dr}\,ds .
+\]
+
+\item (Integrale Form)
+Ist $y \in C(I;\R)$, $\beta \ge 0$ und gilt
+\[
+y(t) \le \alpha(t) + \int_{t_0}^{t} \beta(s)\,y(s)\,ds
+\quad \text{für alle } t \in I,
+\]
+so folgt für alle $t \in I$
+\[
+y(t) \le \alpha(t)
++ \int_{t_0}^{t} \alpha(s)\,\beta(s)\,
+e^{\int_{s}^{t} \beta(r)\,dr}\,ds .
+\]
+\end{enumerate}
+\end{lemma}
+
+ \begin{corollary}
+Gronwall liefert die klassische Stetigkeitsabschätzung für Lösungen und die Lipschitz-Abhängigkeit von Anfangsbedingungen.
+\end{corollary}
+
+
+
+\begin{theorem}[Stetige Abhängigkeit vom Anfangswert]
+Sei $f$ stetig und lokal Lipschitz-stetig bezüglich $y$. 
+Sei $y:[t_0,t_1]\to\R^d$ eine Lösung zum Anfangswert $y_0$.
+Dann existieren Konstanten $\delta,C>0$, sodass für alle
+$\tilde y_0\in B(y_0;\delta)$ eine Lösung
+$\tilde y:[t_0,t_1]\to\R^d$ existiert und
+\[
+\lvert y(t)-\tilde y(t)\rvert
+\le C\,\lvert y_0-\tilde y_0\rvert
+\quad \forall\, t\in[t_0,t_1].
+\]
+\end{theorem}
+
+
+\begin{theorem}[Differenzierbare Abhängigkeit vom Anfangswert]
+Sei $f$ zusätzlich stetig differenzierbar bezüglich $y$.
+Dann ist die Lösungsabbildung
+\[
+p \longmapsto X(t;p)
+\]
+differenzierbar. Die Ableitung
+\[
+v(t)=\partial_p X(t;y_0)\,v_0
+\]
+erfüllt die linearisierte Differentialgleichung
+\[
+v'(t)=A(t)\,v(t), \qquad v(t_0)=v_0,
+\]
+wobei
+\[
+A(t):=\partial_y f\bigl(t,y(t)\bigr).
+\]
+\end{theorem}
+
+\newpage
+\section{Lineare Systeme}
+
+\vspace{0.3cm} \par \subsection{Lineare Autonome Systeme}
+
+
+\begin{definition}
+    Betrachte wieder $(*)$ \ref{AWP}. Ein System der Form $f(t,y) = Ay(t)$ mit einer \underline{konstanten} Matrix $A \in \mathbb{R}^{d \times d}$
+heißt lineares, homogenes, autonomes System.
+\end{definition}
+
+
+\begin{note} Linear-homogene Autonome Systeme sind so gutartig, dass wir ihre Lösungen direkt hinschreiben können. Insbesondere gelten die folgenden Eigenschaften.
+    
+\begin{enumerate}
+\item \emph{Superpositionsprinzip}: Sind $y_1, y_2$ Lösungen, so ist auch $c_1 y_1 + c_2 y_2$ eine Lösung.
+\item \emph{Lösungsraum}: Die Menge aller Lösungen bildet einen Vektorraum der Dimension $d$. Qualitativ formuliert: Sei $y'=Ay$ ein linear-homogenes autonomes System. Dann ist
+$$\mathbb{L}=\left\{y_j = \exp(tA)e_j\; | \; 1\leq j \leq d = \sqrt{\dim(A)}\right\} $$
+genau dieser d-dim. Lösungsraum. Für $\exp(tA)$ siehe \ref{Matrix-Exponential}
+\item Globale Existenz \& Eindeutigkeit: Für jeden AW $y(t_0)=y_0$ existiert eine eindeutige, globale Lösung auf ganz $\mathbb{R}$.
+\end{enumerate}
+\end{note}
+
+
+\begin{definition}\Xlabel{Definition}{subsub}{Matrix-Exponential}
+Für eine Matrix $A \in \mathbb{C}^{d \times d}$ ist die Matrix-Exponentialfunktion definiert
+durch die absolut konvergente Reihe:
+
+\[
+\exp(A) := \sum_{k=0}^{\infty} \frac{A^k}{k!}
+= I + A + \frac{A^2}{2} + \dots
+\]
+\end{definition}
+
+
+\begin{theorem} \label{lin-hom-Lsg}
+Sei $A \in \mathbb{R}^{d \times d}$. Das AWP $y'=Ay$, $y(t_0)=y_0$
+besitzt die eindeutige globale Lösung
+
+\[
+y(t) := \exp((t-t_0)A)y_0
+\]
+\end{theorem}
+
+
+\begin{lemma} Sei $y(t)$ Lösung aus $\ref{lin-hom-Lsg}$. Dann gilt
+\[
+\frac{d}{dt}\exp(tA) = A\exp(tA) = \exp(tA)A
+\]
+\end{lemma}
+
+
+\begin{example} Sei $y'(t)=Ay(t)$ DGL und $A$ ist reell diagonalisierbar. Dann gilt 
+$$A = SDS^{-1}$$ für ein $S$ invertierbar und $D=\mathrm{diag}(\lambda_1,\dots,\lambda_d)$. Berechne nun $\exp(tA)$ mithilfe der Eigenschaft
+$$\exp(SBS^{-1}) = S\exp(B)S^{-1}$$
+\[
+\Rightarrow\exp(tA) = \exp(tSDS^{-1}) = S\exp(tD)S^{-1}
+\]
+
+\[
+= S
+\begin{pmatrix}
+e^{\lambda_1 t} & & \\
+&\ddots& \\
+& &e^{\lambda_d t}
+\end{pmatrix}
+S^{-1}
+\]
+
+Die Lösung ist eine Linearkombination von Termen der Form $e^{\lambda_j t} v_j$,
+wobei $v_j$ die Eigenvektoren (Spalten von $S$) sind.
+\end{example}
+
+\begin{example} Sei die DGL gegeben durch den harmonischen Oszillator.
+\[
+y'' + y = 0 \;\Longleftrightarrow\; z' = Az
+\]
+
+mit $z=(y,y')$ und
+
+\[
+A=
+\begin{pmatrix}
+0 & 1 \\
+-1 & 0
+\end{pmatrix}
+\]
+A ist komplex diagonalisierbar.
+
+$$A=\begin{pmatrix}
+0 & 1 \\
+-1 & 0
+\end{pmatrix}
+ =\begin{pmatrix}
+-i & i \\
+1 & 1
+\end{pmatrix} \begin{pmatrix}
+i & 0 \\
+0 & -i
+\end{pmatrix} \begin{pmatrix}
+i/2 & 1/2 \\
+-i/2 & 1/2
+\end{pmatrix}$$
+Für $z(0) = \vect{1\\0}$
+\[
+z(t) = \exp(tA)z(0)
+=
+\begin{pmatrix}
+\cos(t) \\
+-\sin(t)
+\end{pmatrix}
+\]
+
+Reelle Lösungen entstehen aus komplex konjugierten Eigenwertpaaren
+$\lambda=a\pm i\omega$ und haben die Form
+$e^{at}(\cos(\omega t), \sin(\omega t))$.
+\end{example} 
+
+\begin{example} Sei $y'(t)=Ay(t)$ DGL und $A$ ist nicht diagonalisierbar. Dann ist dennoch jede Matrix $A$ ähnlich zu einer Matrix in Jordanscher Normalform
+$J=S^{-1}AS$.
+
+\[
+J=\mathrm{diag}(J_1,\dots,J_\ell), \quad J_j=\lambda_j I + N_j
+\]
+
+wobei $N_j$ ist eine nilpotent ist. Nehme
+\[
+A=
+\begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{pmatrix}
+\]
+
+$A$ ist nilpotent ($A^3=0$).
+
+\[
+\exp(tA) = I + tA + \frac{t^2}{2}A^2
+=
+\begin{pmatrix}
+1 & t & t^2/2 \\
+0 & 1 & t \\
+0 & 0 & 1
+\end{pmatrix}
+\]
+
+Allgemein:
+\[
+\exp(tJ_j)=e^{\lambda_j t}\exp(tN_j)
+\]
+
+Lösungen enthalten also Terme der Form $t^k e^{\lambda t}$.
+\end{example}
+
+
+
+\vspace{0.3cm} \par \subsection{Lineare Zeitvariante Systeme}
+
+\begin{definition}
+Ein System der Form $y'=A(t)y+b(t)$ mit stetigen, zeitabhängigen
+$A(t), b(t): \R^d \to \R^d$ heißt lineares, \underline{zeitvariantes} System.
+\end{definition}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Globale Existenz und Eindeutigkeit}
+Sei $I\subset\mathbb{R}$ ein offenes Intervall, $A(t)$ und $b(t)$ stetig auf $I$.
+Dann hat das AWP
+$y'=A(t)y+b(t)$, $y(t_0)=y_0$
+für jedes $(t_0,y_0)\in I\times\mathbb{R}^d$
+eine eindeutige, globale Lösung $y:I\to\mathbb{R}^d$. (folgt aus \ref{Picard--Lindelöf} und \ref{von Gronwall})
+\end{theorem}
+
+
+
+\begin{theorem}\Xlabel{Satz \& Definition}{subsub}{Fundamentalmatrix} Sei $A:I\to\mathbb{R}^{d\times d}$ stetig auf $I$ offen.
+Es existiert genau eine Abbildung
+\[
+\Phi:I\times I \to \mathbb{R}^{d\times d}
+\]
+
+sodass für alle $t_0\in I$, $y_0\in\mathbb{R}^d$ die Abbildung
+
+\[
+y(t):=\Phi(t,t_0)y_0
+\]
+das homogene AWP $y'=A(t)y$, $y(t_0)=y_0$ löst.
+$\Phi$ heißt \underline{Fundamentalmatrix} und hat folgende Eigenschaften:
+
+\begin{enumerate}
+\item $\Phi(t,t)=I$
+\item Funktionalgleichung: $\Phi(t,s)=\Phi(t,r)\Phi(r,s)$
+\item Ableitung: $\frac{d}{dt}\Phi(t,s)=A(t)\Phi(t,s)$
+\item Invertierbarkeit: $\Phi(t,s)^{-1}=\Phi(s,t)$
+\end{enumerate}
+
+Falls $A$ nicht von $t$ abhängt:
+\[
+\Phi(t,s)=\exp((t-s)A)
+\]
+
+Falls $A(t)=a(t)\in\mathbb{R}$:
+\[
+\Phi(t,s)=\exp\left(\int_s^t a(\tau)d\tau\right)
+\]
+    
+\end{theorem}
+
+
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Lineare Inhomogene Systeme} Mihilfe von Variation der Konstanten. \bigskip
+
+Sei $\Phi(t,s)$ die Fundamentalmatrix von $y'=A(t)y$.
+Die Lösung des inhomogenen AWP
+$y'=A(t)y+b(t)$, $y(t_0)=y_0$
+ist gegeben durch:
+
+\[
+y(t)=\Phi(t,t_0)y_0
++
+\int_{t_0}^{t} \Phi(t,s)b(s)\,ds
+\]
+
+\end{lemma}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Skalare homogene Systeme 1. Ordnung}
+
+Betrachte das skalare AWP $y'=f(t)g(y)$, $y(t_0)=y_0$.
+
+\begin{enumerate}
+\item Fall: Wenn $g(y_0)=0$, ist $y(t)\equiv y_0$ eine konstante Lösung.
+\item Fall: Wenn $g(y_0)\neq 0$, so ist die Lösung implizit gegeben durch:
+\end{enumerate}
+
+\[
+\int_{y_0}^{y(t)} \frac{1}{g(x)}dx
+=
+\int_{t_0}^{t} f(s)ds
+\]
+\end{lemma}
+
+
+\newpage
+\section{Untermannigfaltigkeiten}
+
+\vspace{0.3cm} \par \subsection{Grundlagen}
+
+
+\begin{definition}\Xlabel{Definition}{subsub}{Parametrisierte Kurve} Eine stetige Abb. $\gamma : I \to \mathbb{R}^d$ heißt parametrisierte Kurve. $\gamma$ heißt regulär, wenn
+$\gamma \in C^1$ und $\gamma'(t) \neq 0$.
+\end{definition}
+
+
+\begin{definition}\Xlabel{Definition}{subsub}{Länge einer \texorpdfstring{$C^1$}{C¹}-Kurve}. Sei $\gamma\in C^1(I,\R^d)$. Dann bezeichnet
+\[
+L(\gamma) = \int_a^b |\gamma'(t)|_2 \, dt.
+\]
+die Länge von $\gamma$.
+\end{definition}
+
+\begin{definition}\Xlabel{Definition}{subsub}{Kurvenintegral}. Für ein Vektorfeld $F$ ist
+\[
+\int_\gamma F \cdot dx
+:=
+\int_a^b F(\gamma(t)) \cdot \gamma'(t) \, dt.
+\]
+Das sogenannte Kurvenintergral unter $\gamma$
+\end{definition}
+
+
+\begin{example} Sei 
+\[
+\gamma(t) = (r\cos t, r\sin t, ct), \quad t \in [0,2\pi].
+\]
+$\gamma$ ist $ C^1$.
+\[
+\gamma'(t) = (-r\sin t, r\cos t, c)
+\quad \Rightarrow \quad
+|\gamma'(t)|_2 = \sqrt{r^2 + c^2}.
+\]
+
+Es ergeben sich Länge daher die Länge über dem Intervall $[0,2\pi]$:
+
+\[
+L(\gamma)
+=
+\int_0^{2\pi} \sqrt{r^2 + c^2}\, dt
+=
+2\pi \sqrt{r^2 + c^2}.
+\]
+
+Sei $F=(0,0,-1)$ ein Vektorfeld. Dann ist die physikalisch verrichtete Arbeit entlang von $\gamma$:
+
+\[
+\int_\gamma F \cdot dx
+=
+\int_0^{2\pi} (0,0,-1)\cdot \gamma'(t)\, dt
+=
+-2\pi c.
+\]
+
+\end{example}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{Wegunabhängigkeit und Gradientenfelder} Sei $\Omega \subset \mathbb{R}^d$ offen und wegzusammenhängend,
+$F:\Omega \to \mathbb{R}^d$ stetig.
+
+Äquivalent sind:
+
+\begin{itemize}
+\item[(a)] $F$ ist ein Gradientenfeld: $\exists f \in C^1(\Omega)$ mit $F=\nabla f$.
+\item[(b)] $F$ ist konservativ (wegunabhängig):
+\[
+\int_{\gamma_1} F\cdot dx
+=
+\int_{\gamma_2} F\cdot dx
+\]
+für alle Kurven $\gamma_1,\gamma_2$ mit gleichen Endpunkten.
+\end{itemize}
+\end{theorem}
+
+
+\begin{lemma} Sei $F=\nabla f$, dann gilt:
+
+\[
+\int_\gamma \nabla f \cdot dx
+=
+f(\gamma(b)) - f(\gamma(a)).
+\]
+
+\end{lemma}
+
+
+
+
+\vspace{0.3cm} \par \subsection{Konstruktion}
+
+\begin{definition} \Xlabel{Definition}{subsub}{Immersion}
+Seien $U \subset \mathbb{R}^k$ offen und $\varphi : U \to \mathbb{R}^n$ eine $C^1$-Abbildung. Die Abbildung $\varphi$ heißt \emph{Immersion}, wenn die Jacobi-Matrix $Df(x)$ für alle $x \in U$  vollen Rang $k$ besitzt, d.h.
+\[
+\operatorname{rang}(Df(x)) = k 
+\quad \text{für alle } x \in U.
+\]
+    
+\end{definition}
+
+\begin{definition} \Xlabel{Definition}{subsub}{Einbettung}
+    Sei $\varphi \in C^1(U;\R^n)$ eine Immersion. Falls 
+    $$\psi: U \to \varphi(U),\quad x \mapsto \varphi(x)$$ ein Homöomorphismus ($U\cong \varphi(U))$ ist, dann heißt $\psi$ \emph{Einbettung}.
+\end{definition}
+
+\begin{note} $\psi$ Einbettung ist ein lokaler Diffeomorphismus, denn $$D\psi = D\varphi$$
+\end{note}
+
+
+\begin{definition} \Xlabel{Definition}{subsub}{Untermannigfaltigkeit} $M \subset \mathbb{R}^n$ ist eine $k$-dimensionale $C^1$-Untermannigfaltigkeit,
+wenn für jedes $a\in M$ lokal eine der äquivalenten Darstellungen gilt:
+
+\begin{itemize}
+\item[(a)] Parameterdarstellung: $M$ ist lokal Bild einer Einbettung
+$\psi:U \to \mathbb{R}^n$.
+
+\item[(b)] Implizite Darstellung: $M$ ist lokal Nullstellenmenge einer Funktion\\  $f: \R^n\supset \widehat V \to \mathbb{R}^{n-k}$ mit vollem Rang $(\rang{Df} = n-k \; \forall x \in \widehat V)$
+
+\item[(c)] Kartendarstellung: $M$ ist lokal diffeomorph zu $\mathbb{R}^k$.
+\end{itemize}
+
+Weitere Darstellung: $M$ ist lokal Graph einer $C^1$-Funktion.
+\end{definition}
+
+\begin{definition}\Xlabel{Definition}{subsub}{Karte, Atlas} Sei $M\subset \R^n$ eine $k-$ dim. $C^1-$ Untermannigfaltigkeit. Wir nennen $V\subset M$ offen ein \underline{Kartengebiet}, falls es $\widehat V , \widehat U$ und ein $\widehat \Phi: \widehat V \to \widehat U$ Diffeomorphismus gibt, sodass $\widehat V \cap M = V$ und $\widehat U \cap \R^n_k = \widehat \Phi (\widehat V)$. In diesem Fall heißt $\widehat \Phi$ \underline{Karte} für $M$. Eine Familie von Karten $(\Phi_i)_{i\in I}$ zu Kartengebieten $(V_i)_{i\in I}$ heißt \underline{Atlas} von $M$, falls $\bigcup_{i\in I} V_i \supset M$.
+\end{definition}
+\begin{example} \Xlabel{Beispiel}{subsub}{Sphäre} Betrachte 
+\[
+S^{n-1}
+=
+\{x \in \mathbb{R}^n : |x|_2^2 = 1\}
+\]
+ist eine $(n-1)$-dimensionale Untermannigfaltigkeit.\bigskip
+
+Implizite Darstellung:
+
+\[
+f(x)=|x|_2^2 -1 \quad \& \quad \nabla f(x)=2x \neq 0 \quad \text{für } x\in S^{n-1}.
+\]
+
+Rang der Jacobi-Matrix $Jf(x)$ ist
+\[
+1 = n-(n-1).
+\]
+
+$S^{n-1}$ ist Nullstellenmenge von $f$.
+
+\end{example}
+
+
+\vspace{0.3cm} \par \subsection{k-dimensionales Volumen}
+
+
+
+\begin{definition} \Xlabel{Definition}{subsub}{Maßtensor} Sei $\varphi: U \to \R^k$ eine Immersion. Die Abbildung
+$$G_\varphi: U \to \R^{k\times k}, \quad y\mapsto J_\varphi(y)^\top J_\varphi (y)$$
+heißt \underline{Maßtensor} von $\varphi$ und 
+$$g^\varphi := \det G_\varphi$$
+die \underline{Gram'sche Determinante} von $\varphi$.
+\end{definition}
+
+\begin{definition} \Xlabel{Definition}{subsub}{k-dim. Volumina}
+    Sei $\varphi: U \to \R^n$ eine Immersion und $V\subset U$ meßbar. Dann heißt
+    $$\Vol_k(\varphi|_V) := \int _V \sqrt{g^\varphi(y)} \lambda^k(dy)$$
+    das \underline{$k-$dim. Volumen} von $\varphi$.\bigskip
+
+    Falls $\exists \varphi: U \to \R^n$ Immersion, wobei $\varphi(U)\cong W$ homöomorph, so nennen wir 
+    $$\Vol_k(W) = \Vol_k(\varphi) $$
+    das  \underline{$k-$dim. Volumen} von $W$.
+\end{definition}
+
+\begin{note} Falls $\varphi_1, \varphi_2$ Einbettungen sind, die $W$ parametrisieren, dann gilt:
+$$\Vol_k(\varphi_1) = \Vol_k(W) = \Vol_k(\varphi_2)$$
+\end{note}
+
+\vspace{0.3cm} \par \subsection{Oberflächenintegral}
+\begin{definition}\Xlabel{Definition}{subsub}{Oberflächenintegral über ein Kartengebiet} Sei $V$ ein Kartengebiet einer $k-$ dim. Untermannigfaltigkeit der $\R^n$. Und $u:V\to \RT$ eine meßbare Funktion. Dann heißt $u$ integrierbar auf $V$, falls für eine Einbettung $\varphi: U \to \R^n$ mit $U\subset \R^k , \varphi(U) = V$ die Funktion $(u\circ \varphi)\sqrt{g^\varphi}$ (Lebesgue-)integrierbar auf $U$ ist. In diesem Fall heißt:
+
+$$\int_V u \d S := \int_U u(\varphi(y))\sqrt{g^\varphi(y)} dy$$
+Das Oberflächenintegral von $u$ auf $V$.
+\end{definition}
+
+\begin{example}
+    Sei $V$ ein Kartengebiet einer $k$-dim. Untermannigfaltigkeit $M$ und $\varphi: U \to \R^n$ eine Einbettung mit $V= \varphi(U)$.
+
+    \begin{enumerate}
+        \item Sei $W\subset V$ offen in $V$. Dann ist $U':=\varphi\r (W)$ offen in $U$ ($\varphi$ homöomorph) und damit $U\ni y\mapsto \1 _{U'}(y)\sqrt{g^\varphi (y)}$ meßbar. Es gilt
+        $$\int _V \1 _{W}(x)\d S(x) = \int _U \1 _{W}(\varphi(y))\sqrt{g^\varphi (y)} dy= \int _U \1 _{U'}(y)\sqrt{g^\varphi (y)} dy $$
+        $$= \int _{U'} \sqrt{g^\varphi (y)} dy= \Vol_k(\varphi|_{U'})$$
+        Da aber $\varphi|_{U'}: U' \to \R^n$ eine Einbettung mit $\varphi(U')= W$ ist, gilt nach \ref{k-dim. Volumina}, dass
+        $$\Vol_k(W) = \int_V \1_W \d S$$
+        \item Sei $V = \Gamma(f)$ Graph einer Funktion $f \in C^1(U)$. Sei $u : V \to \R $ integrierbar. Dann gilt
+$$ \int _V u \d S = \int _U u(y,f(y)) \sqrt{1+ |\nabla f(y)|^2 _2 }\d y$$
+    \end{enumerate}
+    
+\end{example}
+
+
+\begin{definition}\Xlabel{Definition}{subsub}{Zerlegung der Eins}
+Sei $M$ eine Untermannigfaltigkeit. Unter einer \emph{Zerlegung der Eins} auf $M$ verstehen wir eine Familie stetiger Funktionen $(\eta_i)_{i \in I} \subset C(M)$ mit abzählbarer Indexmenge $I$ und folgenden Eigenschaften:
+
+\begin{enumerate}
+    \item[(i)] $0 \le \eta_i(x) \le 1$ für alle Punkte $x \in M$ und alle $i \in I$.
+    
+    \item[(ii)] Die Familie $(\eta_i)_{i \in I}$ ist lokal endlich, d.\,h. für jeden Punkt $x \in M$ existiert eine (in $M$) offene Umgebung $V$ von $x$, sodass $\eta_i = 0$ in $V$ für alle bis auf endlich viele $i \in I$.
+    
+    \item[(iii)] Es gilt 
+    \[
+        \sum_{i \in I} \eta_i(x) = 1
+    \]
+    für alle Punkte $x \in M$.
+\end{enumerate}
+
+Ist $(V_i)_{i \in I}$ eine offene Überdeckung von $M$ (z.\,B. ein abzählbarer Atlas von $M$), so sagen wir, dass die Zerlegung der Eins $(\eta_i)_{i \in I}$ der Überdeckung $(V_i)_{i \in I}$ \emph{untergeordnet} ist, falls zusätzlich gilt:
+
+\begin{enumerate}
+    \item[(iv)] Für jedes $i \in I$ ist der Träger $\operatorname{supp}(\eta_i)$ in $V_i$ enthalten.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem} Jede Untermannigfaltigkeit des $\R^n$ besitzt einen
+abzählbaren Atlas $(V_i,\varphi_i)_{i\in I}$ und eine untergeordnete Zerlegung der Eins ${\eta _i }_{i\in I}$
+\end{theorem}
+
+\begin{definition}\Xlabel{Definition}{subsub}{Oberflächenintegral einer UMf. $M$}
+Sei $M \subset \mathbb{R}^n$ eine Untermannigfaltigkeit. Eine Funktion 
+$u : M \to \overline{\mathbb{R}}$ heißt \emph{messbar auf $M$}, wenn ein abzählbarer Atlas 
+$(V_i)_{i \in I}$ und eine diesem untergeordnete Zerlegung der Eins 
+$(\eta_i)_{i \in I}$ existieren, so dass die Funktionen $u \eta_i$, $i \in I$, 
+messbar auf $M$ sind.
+
+Gilt zusätzlich
+\[
+\sum_{i \in I} \int_{V_i} |u| \eta_i \, dS < \infty,
+\]
+so heißt $u$ \emph{integrierbar auf $M$}, und
+\[
+\int_M u \, dS 
+:= 
+\sum_{i \in I} \int_{V_i} u \eta_i \, dS
+\]
+heißt das \emph{Oberflächenintegral} von $u$ auf $M$.
+\end{definition}
+    
+
+
+
+
+
+
+\vspace{0.3cm} \par \subsection{Tangentialräume}
+\begin{definition}
+\Xlabel{Definition}{subsub}{Tangentialvektor und Tangentialraum} Sei $M \subset \mathbb{R}^n$ eine Untermannigfaltigkeit und $a \in M$. Ein Vektor $v \in \mathbb{R}^n$ heißt \emph{Tangentialvektor an $M$ in $a$}, 
+falls eine $C^1$-Kurve $\gamma : (-\delta,\delta) \to M$ mit $\delta > 0$ existiert, so dass
+\[
+\gamma(0) = a 
+\quad \text{und} \quad 
+\gamma'(0) = v.
+\]
+
+Die Menge aller Tangentialvektoren an $M$ in $a$ heißt der 
+\emph{Tangentialraum von $M$ in $a$} und wird mit
+\[
+T_a (M)
+\]
+bezeichnet.
+\end{definition}
+
+\begin{theorem}
+\Xlabel{Satz}{subsub}{Dimension des Tangentialraums}
+
+Sei $M \subset \mathbb{R}^n$ eine $k$-dimensionale Untermannigfaltigkeit 
+und $a \in M$. Dann ist der Tangentialraum $T_a M$ ein 
+$k$-dimensionaler Untervektorraum von $\mathbb{R}^n$.
+\end{theorem}
+
+\begin{definition}
+\Xlabel{Definition}{subsub}{Normalenraum}
+
+Sei $M \subset \mathbb{R}^n$ eine $(n-1)$-dimensionale Untermannigfaltigkeit 
+und $a \in M$. Der \emph{Normalenraum} von $M$ in $a$ ist das orthogonale Komplement des Tangentialraums:
+\[
+N_a M := (T_a M)^\perp.
+\]
+\end{definition}
+
+
+
+
+\begin{example}
+
+Sei $M \subset \mathbb{R}^n$ implizit durch eine $C^1$-Abbildung 
+$f : \mathbb{R}^n \to \mathbb{R}^m$ gegeben mit
+\[
+M = \{x \in \mathbb{R}^n : f(x) = 0\},
+\]
+und sei $a \in M$. Dann gilt
+\[
+T_a M 
+=
+\mathrm{span}\{\nabla f_1(a), \dots, \nabla f_m(a)\}^\perp.
+\]
+
+Insbesondere für die Einheitssphäre
+\[
+S^{n-1}
+=
+\{x \in \mathbb{R}^n : f(x) = 0\}
+\quad \text{mit} \quad
+f(x) = |x|^2 - 1
+\]
+ist
+\[
+\nabla f(x) = 2x.
+\]
+
+Für $a \in S^{n-1}$ folgt daher
+\[
+T_a S^{n-1}
+=
+\{ v \in \mathbb{R}^n : a \cdot v = 0 \}.
+\]
+
+Der Tangentialraum ist also die Hyperebene durch den Ursprung, 
+die orthogonal auf dem Vektor $a$ steht.
+\end{example}
+
+\begin{definition}
+\Xlabel{Definition}{subsub}{Einheitsnormalenfeld} Sei $M \subset \mathbb{R}^n$ eine $(n-1)$-dimensionale Untermannigfaltigkeit. Unter einem \emph{Einheitsnormalenfeld} auf $M$ verstehen wir eine \underline{stetige} Abbildung
+\[
+\nu : M \to \mathbb{R}^n,
+\]
+so dass für alle $x \in M$ gilt:
+\[
+\nu(x) \perp T_x M
+\quad \text{und} \quad
+|\nu(x)|^2 = 1.
+\]
+\end{definition}
+
+\begin{lemma} Sei $M \subset \mathbb{R}^n$ eine $(n-1)$-dimensionale, wegzusammenhängende 
+Untermannigfaltigkeit. Dann gibt es auf $M$ entweder kein 
+oder genau zwei Einheitsnormalenfelder.
+\end{lemma}
+
+\begin{definition}
+\Xlabel{Definition}{subsub}{Orientierbarkeit} Eine $(n-1)$-dimensionale Untermannigfaltigkeit $M \subset \mathbb{R}^n$ heißt \emph{orientierbar}, 
+falls sie ein Einheitsnormalenfeld $\nu$ besitzt. In diesem Fall nennt man $(M,\nu)$ eine 
+\emph{orientierte $(n-1)$-dimensionale Untermannigfaltigkeit} 
+im $\mathbb{R}^n$.
+\end{definition}
+
+\begin{example}
+
+\begin{enumerate}
+    \item[(a)] Die Sphäre
+    \[
+    S^{n-1} := \{ x \in \mathbb{R}^n : |x|^2 = 1 \}
+    \]
+    ist orientierbar. Die beiden Einheitsnormalenfelder sind gegeben durch
+    \[
+    \nu_\pm(x) := \pm x.
+    \]
+
+    \item[(b)] Das Möbiusband ist nicht orientierbar .
+\end{enumerate}
+\end{example}
+
+
+\vspace{0.3cm} \par \subsection{Globale Integralsätze}
+
+\begin{definition}
+\Xlabel{Definition}{subsub}{$C^1$-Rand} Sei $\Omega \subset \mathbb{R}^n$ offen. 
+Wir sagen, dass $\Omega$ einen \emph{$C^1$-Rand} besitzt, 
+falls für alle $a \in \partial \Omega$ eine offene Menge 
+$U \subset \mathbb{R}^n$ und eine Funktion $f \in C^1(U)$ 
+existieren, so dass $\nabla f(x) \neq 0$ für alle $x \in U$ gilt und
+
+\begin{enumerate}[label=\alph*)]
+\item $\partial \Omega \cap U = \{ x \in U : f(x) = 0 \}$
+\item $\Omega \cap U = \{ x \in U : f(x) < 0 \}$
+\end{enumerate}
+
+Ist $\Omega \subset \mathbb{R}^n$ ein Gebiet mit $C^1$-Rand, 
+so liegt $\Omega$ lokal um jeden Randpunkt $x \in \partial \Omega$ 
+immer nur auf einer Seite des Randes. 
+
+Außerdem ist der Rand so regulär (nämlich eine $C^1$-Untermannigfaltigkeit), 
+dass an jedem Randpunkt eine eindeutig bestimmte Normale existiert.
+\end{definition}
+
+\begin{lemma} Sei $\Omega \subset \mathbb{R}^n$ offen mit $C^1$-Rand.  
+Dann ist $\partial \Omega$ orientierbar und es existiert genau ein 
+Einheitsnormalenfeld 
+\[
+\nu : \partial \Omega \to \mathbb{R}^n
+\] 
+an $\partial \Omega$, das nach außen zeigt, d.h.
+\[
+\forall a \in \partial \Omega \;\; \exists \varepsilon > 0 : 
+a + t \, \nu(a) \notin \Omega \quad \text{für alle } t \in (0, \varepsilon).
+\]
+
+Der Vektor $\nu(a)$ heißt \emph{äußerer (Einheits-)Normalvektor} an 
+$\partial \Omega$ in $a$.
+\end{lemma}
+
+\begin{note} Sei $\Omega \subset \mathbb{R}^n$ offen mit $C^1$-Rand und lokal beschrieben durch
+\[
+\Omega \cap U = \{ x \in U : f(x) < 0 \}, \qquad 
+\partial \Omega \cap U = \{ x \in U : f(x) = 0 \}, 
+\]
+mit $\nabla f(a) \neq 0$ für alle $a \in \partial \Omega$.  
+
+Dann ist der äußere Einheitsnormalenvektor $\nu(a)$ genau gegeben durch den normierten Gradienten:
+\[
+\nu(a) = \frac{\nabla f(a)}{|\nabla f(a)|_2}.
+\]
+
+Dieses Vorzeichen des Gradienten wählt die Richtung „nach außen“, also aus $\Omega$ heraus.
+\end{note}
+
+
+\begin{note}
+\Xlabel{Definition}{subsub}{Divergenz und Rotation eines Vf.}
+
+Sei $F = (F_1, \dots, F_n)$ ein $C^1$-Vektorfeld auf einem offenen Gebiet in $\mathbb{R}^n$. Dann ist definiert
+
+\begin{enumerate}[label = $-$]
+    \item \emph{Divergenz:} 
+    \[
+    \operatorname{div} F := \sum_{i=1}^n \frac{\partial F_i}{\partial x_i}.
+    \]
+    Sie misst die lokale Quell- bzw. Senkenstärke des Feldes.
+
+    \item \emph{Rotation (für $n=3$):} 
+    \[
+    \operatorname{rot} F := 
+    \nabla \times F 
+    =
+    \begin{pmatrix}
+    \frac{\partial F_3}{\partial x_2} - \frac{\partial F_2}{\partial x_3} \\
+    \frac{\partial F_1}{\partial x_3} - \frac{\partial F_3}{\partial x_1} \\
+    \frac{\partial F_2}{\partial x_1} - \frac{\partial F_1}{\partial x_2}
+    \end{pmatrix}.
+    \]
+    Sie misst die lokale Wirbelstärke des Feldes.
+\end{enumerate}
+
+Für $n \neq 3$ kann die Rotation in \(\mathbb{R}^n\) über Differentialformen verallgemeinert werden,  
+in \(\mathbb{R}^2\) reduziert sich \(\operatorname{rot} F\) auf einen Skalar: 
+\(\partial_1 F_2 - \partial_2 F_1\).
+\end{note}
+
+
+\begin{theorem}
+\Xlabel{Satz}{subsub}{Integralsatz von Gauß}
+
+Sei $\Omega \subset \mathbb{R}^n$ offen und beschränkt, und sei $\Omega$ ein Gebiet mit $C^1$-Rand.  
+Sei $U \subset \mathbb{R}^n$ offen mit $\overline{\Omega} \subset U$ und sei 
+$F : U \to \mathbb{R}^n$ ein $C^1$-Vektorfeld.  
+
+Dann gilt:
+\[
+\int_{\Omega} \operatorname{div} F(x) \, dx
+=
+\int_{\partial \Omega} F(a) \cdot \nu(a) \, dS(a),
+\]
+wobei $\nu : \partial \Omega \to \mathbb{R}^n$ das äußere Einheitsnormalenfeld bezeichnet.
+\end{theorem}
+
+\begin{note}
+
+Im Spezialfall $n=1$, bei zusammenhängendem $\Omega$, ist $\Omega$ gerade ein offenes Intervall 
+der Form $\Omega = (a,b)$, $F$ ist ein Skalarfeld und $\operatorname{div} F = F'$.  
+
+In diesem Fall liefert der Satz von Gauß gerade den Hauptsatz der Integral- und Differentialrechnung:
+\[
+\int_a^b F'(x) \, dx = F(b) - F(a).
+\]
+
+Wir können uns daher den Satz von Gauß als eine Verallgemeinerung 
+des Hauptsatzes der Differential- und Integralrechnung auf höhere Dimensionen vorstellen.
+\end{note}
+
+
+\begin{lemma}
+\Xlabel{Lemma}{subsub}{1. und 2. Greensche Formel} Sei $\Omega \subset \mathbb{R}^n$ offen und beschränkt mit $C^1$-Rand.  
+Sei $f$ (bzw. $g$) eine in einer offenen Umgebung von $\overline{\Omega}$ einmal (bzw. zweimal) stetig differenzierbare Funktion. Dann gilt die \emph{erste Greensche Formel}:
+\[
+\int_{\Omega} f(x) \, \Delta g(x) \, dx
+=
+- \int_{\Omega} \nabla f(x) \cdot \nabla g(x) \, dx
++ \int_{\partial \Omega} f(a) \, (\nabla g(a) \cdot \nu(a)) \, dS(a).
+\]
+
+Im Spezialfall $f = 1$ folgt:
+\[
+\int_{\Omega} \Delta g(x) \, dx
+=
+\int_{\partial \Omega} \nabla g(a) \cdot \nu(a) \, dS(a).
+\]
+
+Ist $f$ zusätzlich zweimal stetig differenzierbar in einer offenen Umgebung von $\overline{\Omega}$, 
+dann gilt die \emph{zweite Greensche Formel}:
+\[
+\int_{\Omega} \bigl( f(x) \, \Delta g(x) - g(x) \, \Delta f(x) \bigr) dx
+=
+\int_{\partial \Omega} \bigl( f \, (\nabla g \cdot \nu) - g \, (\nabla f \cdot \nu) \bigr) dS.
+\]
+
+\end{lemma}
+
+
+\begin{note}
+
+Hierbei ist $\nabla g \cdot \nu$ gerade die Richtungsableitung von $g$ in Richtung der äußeren Normalen.  
+Häufig verwendet man hierfür die Notation
+\[
+\partial_\nu g := \nabla g \cdot \nu.
+\]
+\end{note}
+
+
+\begin{theorem}
+\Xlabel{Satz}{subsub}{Satz von Stokes im $R^3$}
+
+Sei $M \subset \hat{V}$ eine 2-dimensionale orientierbare Untermannigfaltigkeit in $\mathbb{R}^3$,  
+die durch eine Einbettung 
+\[
+\varphi \in C^2(U ; \mathbb{R}^3), \quad U \subset \mathbb{R}^2 \text{ offen},
+\] 
+global parametrisiert wird.  
+
+Sei $A \subset M$ eine beschränkte, offene reguläre Fläche mit Rand $\partial A$,  
+der durch eine $C^1$-Kurve parametrisiert werden kann. Genauer:  
+Es sei 
+\[
+\Omega := \varphi^{-1}(A) \subset U
+\] 
+offen und beschränkt, es gelte $\Omega$ beschränkt mit $C^1$-Rand,  
+und es existiere eine reguläre Kurve
+\[
+\gamma : [0,1] \to \mathbb{R}^2
+\] 
+mit $\gamma(0) = \gamma(1)$, die das Intervall $[0,1)$ bijektiv auf $\partial \Omega$ abbildet.  
+
+Wir bezeichnen das äußere Einheitsnormalenfeld mit
+\[
+\nu : \partial \Omega \to \mathbb{R}^2.
+\] und $\overline{\Omega} \subset U$.  
+
+Dann gilt für jedes $C^1$-Vektorfeld 
+\[
+F : \hat{U} \to \mathbb{R}^3
+\] 
+auf einer offenen Umgebung $\hat{V} \subset \mathbb{R}^3$ von $M$ die Identität:
+\[
+\int_{\partial A} F(x) \cdot dx
+=
+\int_A \operatorname{rot} F(x) \cdot \nu(x) \, dS(x),
+\]
+wobei der Umlaufsinn der Randkurve des Kurvenintegrals auf der linken Seite  
+und die Normalenrichtung $\nu(x)$ (wie in (10.5) und (10.7) beschrieben) zueinander passen. \bigskip
+
+Wir schreiben in Kurzform auch mit dem Kurvenintegral $\oint$: \bigskip
+
+In $\mathbb{R}^2$:
+
+\[
+\oint_{\partial\Omega} F\cdot dx
+=
+\int_\Omega
+\left(
+\frac{\partial F_2}{\partial x_1}
+-
+\frac{\partial F_1}{\partial x_2}
+\right)
+dx_1 dx_2.
+\]
+
+In $\mathbb{R}^3$:
+
+\[
+\oint_{\partial A} F\cdot dx
+=
+\int_A (\mathrm{rot}\,F)\cdot \nu\, dS.
+\]
+\end{theorem}
+
+\PropertyNotice
+\end{document}

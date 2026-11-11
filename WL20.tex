@@ -1,0 +1,838 @@
+\documentclass[11pt]{article}
+\usepackage[style=script-v3, privacy=anonym]{../tools/library}
+\renewcommand{\Lecturer}{Prof. U. Krähmer}
+
+
+
+
+\newcommand{\Comm}{\mathbf{Comm}}
+\renewcommand{\Hom}[2]{\mathrm{Hom}_k(#1, #2)}
+\newcommand{\Nat}{\mathbf{Nat}}
+\newcommand{\Aff}{\mathbf{Aff}}
+\newcommand{\Bilin}{\mathbf{Bilin}}
+\newcommand{\Grp}{\mathbf{Grp}}
+\newcommand{\Sbold}{\mathbf{S}}
+\newcommand{\Ibold}{\mathbf{I}}
+\newcommand{\GrpSch}{\mathbf{GrpSch}}
+\newcommand{\Hopf}{\mathbf{Hopf}}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\makeatletter
+\renewcommand{\toclevel@subsubsection}{2}
+\makeatother
+
+\setlength{\cftbeforesecskip}{18pt}
+
+
+\geometry{top = 1.5cm, bottom = 2.3cm, left= 1.5cm, right = 1.5cm}
+\begin{document}
+
+
+\head{Hopf-Algebren und Gruppenfunktoren}{Seminararbeit zur WL20: "`Affine Gruppenschemata"'}
+\Abstract[Abstract]{
+  \noindent  In dieser Arbeit motivieren und beweisen wir die Äquivalenz $\GrpSch_k\ \simeq\ \Hopf_k^{\mathrm{op}}$
+  \noindent zwischen den Kategorien der affinen Gruppenschemata und der (kommutativen) Hopf-Algebren über $k$: Ein affines Gruppenschema $G\cong\Comm_k(A,-)$
+  entspricht genau einer Hopf-Algebren-Struktur auf $A$, und Morphismen von Gruppenschemata entsprechen Hopf-Algebren-Homomorphismen
+  in umgekehrter Richtung. Inhaltlich folgt diese Arbeit durchgehend Kapitel \hyperref[book]{§}1 (Abschnitte 1.1 bis 1.6) von Waterhouse.}
+
+
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+
+
+
+
+\section{Einleitung}
+
+
+\noindent Sei $k$ ein kommutativer Ring, $\Comm_k$ die Kategorie der kommutativen $k$-Algebren, $\Set$ die Kategorie der Mengen.
+Betrachten wir zunächst noch einmal das uns bekannte Beispiel:
+$$\SL_2: \Comm_k \to \Set$$
+$$R\mapsto \left\{\begin{pmatrix} a & b\\ c & d\end{pmatrix}\  \Big| \ ad-bc=1\right\} \qquad  [\varphi: R\to S]\mapsto \left[\SL_2\varphi: \begin{pmatrix} a & b\\ c & d\end{pmatrix}\mapsto \begin{pmatrix} \varphi(a) & \varphi(b)\\ \varphi(c) & \varphi(d)\end{pmatrix}\right]$$
+Das folgende Resultat über diesen $\Set$-Funktor ist bereits bekannt:
+\begin{theorem}[Darstellbarkeit SL\texorpdfstring{$_2$}{2}] \Theorem
+    $\SL_2 \cong \Comm_k(A,-)$, wobei $A:= k[X_{11}, X_{12}, X_{21}, X_{22}]/(X_{11}X_{22} - X_{12}X_{21} - 1)$.
+\end{theorem} 
+\begin{proof}[Beweisidee] Wir betrachten die natürliche Transformation $\alpha: \Comm_k(A,-) \Rightarrow \SL_2$ und stellen fest, dass diese ein Isomorphismus ist.
+    
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[node distance = 1cm, auto]
+            \node (A) at (0,0) {$\Comm_k(A,R)$};
+            \node (B) at (5,0) {$\Comm_k(A,S)$};
+            \node (C) at (0,-3) {$\SL_2(R)$};
+            \node (D) at (5,-3) {$\SL_2(S)$};
+
+            \draw[->] (A) -- (B) node[midway, above] {$\varphi\circ-$};
+            \draw[->] (B) -- (D) node[midway, right] {$\alpha_S$};
+            \draw[->] (A) -- (C) node[midway, left] {$\alpha_R$};
+            \draw[->] (C) -- (D) node[midway, below] {$\SL_2\varphi$};
+        \end{tikzpicture}
+    \end{figure}
+Hierbei wirkt $\varphi\in\Comm_k(R,S)$ oben durch Postkomposition und unten durch komponentenweise Anwendung auf die Matrixeinträge.
+\end{proof}
+
+
+Weiterhin ist uns die folgende -- für unsere Zwecke sinnvolle -- Formulierung des Yoneda-Lemmas bekannt:
+
+\begin{theorem}[Yoneda-Lemma] \Theorem Seien $F, G: \Comm_k \to \Set$ und $F\cong \Comm_k(A,-)$ sowie $G\cong \Comm_k(B,-)$.
+    Dann ist $\Nat(F,G) \cong \Comm_k(B,A)$.
+\end{theorem}
+\begin{proof}[Beweisidee]
+    Wir nehmen die allgemeine Formulierung des Yoneda-Lemmas
+    $$\Nat(\Comm_k(A,-), F) \cong F(A)$$
+    und setzen ein.
+    $$\Nat(F,G) \cong \Nat(\Comm_k(A,-), G) \cong G(A) \cong \Comm_k(B,A)$$
+\end{proof}
+
+\newpage
+
+\section{Hopf-Algebren}
+Ausgangspunkt dieses Abschnitts ist die Beobachtung, dass $\SL_2$ als Funktor 
+eigentlich viel mehr (also überhaupt) Struktur enthält als nur Mengenabbildungen in $\Set$. Denn $\SL_2(R)$ als Menge ist mit der 
+Matrixmultiplikation eine Gruppe. Um diese Eigenschaft auf Funktorebene zu verstehen, müssen wir die klassischen Gruppenaxiome 
+kategoriell formulieren. Davor aber noch einige (mehr oder weniger) triviale Beispiele zu darstellbaren Funktoren $\Comm_k \to \Set$.
+
+\begin{lemma}[1-Funktor] \Theorem Sei $\1: \Comm_k \to \Set$, sodass $R\mapsto \{*\}, [\varphi: R\to S] \mapsto \id_*$. Dann ist 
+    $$\1 \cong \Comm_k(k,-)$$
+\begin{proof}
+    Für alle $R\in \Comm_k$ gilt $\Comm_k(k,R) = \{\eta: k \to R, 1_k \mapsto 1_R\}$ und diese Bijektion
+     wird natürlich in $R$. 
+\end{proof}
+\end{lemma}
+
+\begin{lemma}[Kartesischer Funktor] \Theorem Seien $F\cong \Comm_k(A,-)$ und $G\cong \Comm_k(B,-)$. Dann ist der Funktor
+    $$F\times G: \Comm_k \to \Set$$
+    $$R\mapsto F(R)\times G(R) \qquad [\varphi: R\to S] \mapsto \Big[F\varphi\times G\varphi: F(R)\times G(R) \to F(S)\times G(S)\Big]$$
+    dargestellt durch $A\otimes_k B$. Also $F\times G\cong \Comm_k(A\otimes_k B, -)$.
+    \begin{proof} Wir klären zunächst die Algebrenstruktur auf $A\otimes_k B$: Die innere Multiplikation ist gegeben durch
+        $$(a_1\otimes b_1)(a_2\otimes b_2) = a_1a_2 \otimes b_1b_2$$
+        und das Einselement ist $1\otimes 1$. Die Kommutativität wird von $A$ und $B$ komponentenweise vererbt, also ist auch $A\otimes_k B\in \Comm_k$.
+        Da offensichtlich $F\times G \cong \Comm_k(A,-) \times \Comm_k(B,-)$, reicht es, einen natürlichen Isomorphismus
+        $$\alpha: \Comm_k(A,-) \times \Comm_k(B,-) \Rightarrow \Comm_k(A\otimes_k B,-)$$
+        zu finden. Sei dafür $R\in\Comm_k$ und $(\varphi,\psi)\in \Comm_k(A,R)\times\Comm_k(B,R)$. Die Abbildung
+        $$\varphi\psi: A\times B \to R, \quad (a,b)\mapsto \varphi(a)\psi(b)$$
+        ist $k$-bilinear, da $\varphi$ und $\psi$ $k$-linear sind. Nach der universellen Eigenschaft des Tensorprodukts faktorisiert sie also eindeutig über eine $k$-lineare Abbildung
+        $$\overline{\varphi\psi}: A\otimes_k B \to R, \quad a\otimes b \mapsto \varphi(a)\psi(b).$$
+        Diese ist sogar ein $k$-Algebren-Homomorphismus: 
+        $$\overline{\varphi\psi}\big((a_1\otimes b_1)(a_2\otimes b_2)\big)
+            = \varphi(a_1a_2)\,\psi(b_1b_2)
+            = \varphi(a_1)\varphi(a_2)\psi(b_1)\psi(b_2)
+            = \varphi(a_1)\psi(b_1)\,\varphi(a_2)\psi(b_2)
+            = \overline{\varphi\psi}(a_1\otimes b_1)\,\overline{\varphi\psi}(a_2\otimes b_2),$$
+        wobei die Kommutativität von $R$ unverzichtbar ist. Daher setze 
+        $$\alpha_R: \Comm_k(A,R)\times\Comm_k(B,R) \to \Comm_k(A\otimes_k B,R), \quad (\varphi,\psi) \mapsto \overline{\varphi\psi}.$$
+
+        Umgekehrt existieren die kanonischen $k$-Algebren-Homomorphismen $\iota_1: A \to A\otimes_k B,\ a \mapsto a\otimes 1$ und $\iota_2: B \to A\otimes_k B,\ b \mapsto 1\otimes b$. Diese liefern
+        $$
+            \alpha_R\inv: \Comm_k(A\otimes_k B, R) \to \Comm_k(A,R) \times \Comm_k(B,R), \quad h \mapsto (h\circ \iota_1,\ h\circ \iota_2)
+        $$        
+        als Kandidaten für die Umkehrabbildung.
+        \newpage 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        Diese beiden Abbildungen sind tatsächlich invers zueinander: Für $(\varphi,\psi)\in \Comm_k(A,R) \times \Comm_k(B,R)$ gilt
+        $$\alpha_R\inv\big(\alpha_R(\varphi,\psi)\big) = \big(a\mapsto \varphi(a)\psi(1),\ b\mapsto \varphi(1)\psi(b)\big) = (\varphi,\psi),$$
+        und für $h\in\Comm_k(A\otimes_k B,R)$ gilt 
+        $$\alpha_R\big(\alpha_R\inv(h)\big)(a\otimes b) = h(a\otimes 1)\,h(1\otimes b) = h\big((a\otimes 1)(1\otimes b)\big) = h(a\otimes b).$$
+        Bei näherer Betrachtung bemerkt man ebenfalls die Natürlichkeit dieser Abbildung in $R$. 
+    \end{proof}
+\end{lemma}
+
+
+Nun erinnern wir uns an die klassische Formulierung der Gruppenaxiome. 
+\begin{definition}[Gruppe I]\Theorem Sei $G$ eine  Menge und $\cdot : G\times G \to G$. Falls
+\begin{enumerate}
+    \item $(a\cdot b)\cdot c = a\cdot (b\cdot c) \quad \forall a,b,c\in G$ \hfill (Assoziativität)
+    \item $\exists 1\in G: \quad  1 \cdot a = a\quad \forall a\in G$ \hfill ((Links)neutrales Element)
+    \item $\forall a\in G \ \exists a\inv: \quad a\inv \cdot a = 1$ \hfill ((Links)inverses Element) 
+\end{enumerate}
+gilt, so ist $(G,\cdot)$ eine \emph{Gruppe}. 
+\end{definition}
+
+Die Forderung nach einem Linksneutralen und Linksinversen reicht völlig aus, denn mit ein paar wenigen Argumenten sieht man, dass die Beidseitigkeit recht unmittelbar folgt. Wir formulieren die drei Axiome nun einmal mithilfe von Diagrammen (und nur für das linksneutrale und das linksinverse Element). 
+
+\begin{definition}[Gruppe II] \Theorem Sei $G$ eine Menge und $\mu: G\times G \to G$, $e: \{*\}\to G$ und $\Ibold: G\to G$ Abbildungen. Falls die folgenden
+    drei Diagramme kommutieren, so heißt $(G,\mu, e, \Ibold)$ \emph{Gruppe}.
+    
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[node distance = 1cm, auto, scale=0.79]
+            \node (A) at (0,0) {$G\times G \times G$};
+            \node (B) at (5,0) {$G\times G$};
+            \node (C) at (0,-3) {$G\times G$};
+            \node (D) at (5,-3) {$G$};
+
+            \draw[->] (A) -- (B) node[midway, above] {$\mu \times \id$};
+            \draw[->] (B) -- (D) node[midway, right] {$\mu$};
+            \draw[->] (A) -- (C) node[midway, left] {$\id\times\mu$};
+            \draw[->] (C) -- (D) node[midway, below] {$\mu$};
+            
+            \def\D{8}
+
+            \node (E) at (0+\D,0) {$\{*\}\times G$};
+            \node (F) at (5+\D,0) {$G\times G$};
+            \node (G) at (0+\D,-3) {$G$};
+            \node (H) at (5+\D,-3) {$G$};
+
+            \draw[->] (E) -- (F) node[midway, above] {$e\times \id$};
+            \draw[->] (F) -- (H) node[midway, right] {$\mu$};
+            \draw[->] (E) -- (G) node[midway, left] {$\pi$};
+            \draw[->] (E) -- (G) node[midway, right] {$\cong$};
+            \draw[->] (G) -- (H) node[midway, below] {$\id$};
+            
+            \node (I) at (0+\D+\D,0) {$G$};
+            \node (J) at (5+\D+\D,0) {$G\times G$};
+            \node (K) at (0+\D+\D,-3) {$\{*\}$};
+            \node (L) at (5+\D+\D,-3) {$G$};
+
+            \draw[->] (I) -- (J) node[midway, above] {$(\Ibold, \id)$};
+            \draw[->] (J) -- (L) node[midway, right] {$\mu$};
+            \draw[->] (I) -- (K) node[midway, left] {};
+            \draw[->] (K) -- (L) node[midway, below] {$e$};
+        \end{tikzpicture}
+    \end{figure}
+\end{definition}
+Verfolgen wir die Diagramme elementweise, so wird klar, dass diese Formulierungen äquivalent zueinander sind.
+\begin{lemma}
+    Die Definitionen \ref{Gruppe I} und \ref{Gruppe II} sind äquivalent.
+\end{lemma}
+
+
+Seien erneut $R,S\in \Comm_k$ und $\varphi \in \Comm_k(R,S)$. Nehmen wir nun an, dass so ein Gruppenfunktor $G: \Comm_k \to \Grp$ existiert. Dann induziert 
+jedes solche $\varphi$ einen Gruppenhomomorphismus $G\varphi: G(R)\to G(S)$. Dieses $G\varphi$ aber muss verträglich sein mit der Abbildung $\mu_R$ (sowie $e_R,\Ibold_R$).
+Deshalb muss ebenfalls das nachfolgende Natürlichkeitsquadrat unter $\mu$ kommutieren.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[node distance = 1cm, auto, scale=0.9]
+            \node (A) at (0,0) {$G(R)\times G(R)$};
+            \node (B) at (5,0) {$G(S)\times G(S)$};
+            \node (C) at (0,-3) {$G(R)$};
+            \node (D) at (5,-3) {$G(S)$};
+
+            \draw[->] (A) -- (B) node[midway, above] {$G\varphi\times G\varphi$};
+            \draw[->] (B) -- (D) node[midway, right] {$\mu_S$};
+            \draw[->] (A) -- (C) node[midway, left] {$\mu_R$};
+            \draw[->] (C) -- (D) node[midway, below] {$G\varphi$};
+        \end{tikzpicture}
+    \end{figure}
+    \newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mit einem scharfsinnigen Blick sieht man genau, dass dies nichts anderes bedeutet, als dass $\mu: G\times G \Rightarrow G$ eine natürliche Transformation zweier Funktoren darstellt
+(und genauso auch die Abbildungen $e: \1 \Rightarrow G$ und $\Ibold: G\Rightarrow G$).
+Um die heuristische Motivation für das im Abstract erwähnte und in \ref{Hauptsatz} bewiesene Theorem zu vollenden, nutzen wir noch die Resultate \ref{Yoneda-Lemma}, \ref{1-Funktor} und \ref{Kartesischer Funktor}.
+Wenn besagter Gruppenfunktor $G$ (aufgefasst als $U\circ G: \Comm_k \to \Grp \to \Set)$ darstellbar wäre, also $U\circ G\cong \Comm_k(A,-)$, dann wäre 
+\begin{enumerate}
+    \item $G\times G \cong \Comm_k(A\otimes_k A, -)$ (\ref{Kartesischer Funktor}) und daher $\mu \in \Nat(G\times G, G) \cong \Comm_k(A, A\otimes_k A)$ (\ref{Yoneda-Lemma})
+    \item $\1 \cong \Comm_k(k,-)$ (\ref{1-Funktor}) und daher $e\in \Nat(\1, G) \cong \Comm_k(A,k) (\ref{Yoneda-Lemma})$
+    \item $G\cong \Comm_k(A,-)$ und daher $\Ibold \in \Nat(G,G) \cong \Comm_k(A,A)$ (\ref{Yoneda-Lemma})
+\end{enumerate} 
+Damit sind wir nun (vorerst) am Ziel angelangt.
+
+\begin{definition}[Hopf-Algebra] \Theorem 
+    Sei $A\in \Comm_k$. Existieren die folgenden Abbildungen:
+    \begin{enumerate}
+        \item $[\Delta: A\to A\otimes_k A ]\in \Comm_k(A, A\otimes_k A)$\hfill (Koprodukt)
+        \item $[\varepsilon: A\to k]\in \Comm_k(A, k)$ \hfill (Koeins)
+        \item $[\Sbold: A\to A] \in \Comm_k(A, A)$ \hfill (Koinverse)
+    \end{enumerate} sodass die folgenden Diagramme kommutieren, so heißt $(A, \Delta, \varepsilon, \Sbold)$ \emph{Hopf-Algebra}.
+    
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}[node distance = 1cm, auto, scale=0.785]
+            \node (A) at (0,0) {$A\otimes_k A\otimes_k A$};
+            \node (B) at (5,0) {$A\otimes_k A$};
+            \node (C) at (0,-3) {$A\otimes_k A$};
+            \node (D) at (5,-3) {$A$};
+
+            \draw[->] (B) -- (A) node[midway, above] {$\id \otimes \Delta$};
+            \draw[->] (D) -- (B) node[midway, right] {$\Delta$};
+            \draw[->] (C) -- (A) node[midway, left] {$\Delta\otimes\id$};
+            \draw[->] (D) -- (C) node[midway, below] {$\Delta$};
+            
+            \def\D{8}
+
+            \node (E) at (0+\D,0) {$k \otimes_k A$};
+            \node (F) at (5+\D,0) {$A\otimes_k A$};
+            \node (G) at (0+\D,-3) {$A$};
+            \node (H) at (5+\D,-3) {$A$};
+
+            \draw[->] (F) -- (E) node[midway, above] {$\varepsilon\otimes \id$};
+            \draw[->] (H) -- (F) node[midway, right] {$\Delta$};
+            \draw[->] (G) -- (E) node[midway, left] {$\lambda\inv$};
+            \draw[->] (G) -- (E) node[midway, right] {$\cong$};
+            \draw[->] (H) -- (G) node[midway, below] {$\id$};
+            
+            \node (I) at (0+\D+\D,0) {$A$};
+            \node (J) at (5+\D+\D,0) {$A\otimes_k A$};
+            \node (K) at (0+\D+\D,-3) {$k$};
+            \node (L) at (5+\D+\D,-3) {$A$};
+
+            \draw[->] (J) -- (I) node[midway, above] {$(\Sbold, \id)$};
+            \draw[->] (J) -- (I) node[midway, below] {$ = m_A \circ(\Sbold\otimes \id)$};
+            \draw[->] (L) -- (J) node[midway, right] {$\Delta$};
+            \draw[->] (K) -- (I) node[midway, left] {$\eta_A$};
+            \draw[->] (L) -- (K) node[midway, below] {$\varepsilon$};
+        \end{tikzpicture}
+    \end{figure}
+    Falls $(A,\Delta_A,\varepsilon_A,\Sbold_A)$ und $(B,\Delta_B,\varepsilon_B,\Sbold_B)$ zwei Hopf-Algebren sind, so ist ein $f\in\Comm_k(B,A)$ ein
+    \emph{Hopf"=Algebren"=Homomorphismus}, falls
+    $$\Delta_A\circ f = (f\otimes f)\circ\Delta_B,\qquad \varepsilon_A\circ f=\varepsilon_B,\qquad \Sbold_A\circ f = f\circ\Sbold_B$$
+    bzw. die nachfolgenden Diagramme kommutieren.
+        \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}[node distance = 1cm, auto, scale=0.785]
+            \node (A) at (0,0) {$A\otimes_k A$};
+            \node (B) at (5,0) {$B\otimes_k B$};
+            \node (C) at (0,-3) {$A$};
+            \node (D) at (5,-3) {$B$};
+
+            \draw[->] (B) -- (A) node[midway, above] {$f \otimes f$};
+            \draw[->] (D) -- (B) node[midway, right] {$\Delta_B$};
+            \draw[->] (C) -- (A) node[midway, left] {$\Delta_A$};
+            \draw[->] (D) -- (C) node[midway, below] {$f$};
+            
+            \def\D{8}
+
+            \node (E) at (0+\D,0) {$k$};
+            \node (F) at (5+\D,0) {$k$};
+            \node (G) at (0+\D,-3) {$A$};
+            \node (H) at (5+\D,-3) {$B$};
+
+            \draw[->] (F) -- (E) node[midway, above] {$\id$};
+            \draw[->] (H) -- (F) node[midway, right] {$\varepsilon_B$};
+            \draw[->] (G) -- (E) node[midway, left] {$\varepsilon_A$};
+           \draw[->] (H) -- (G) node[midway, below] {$f$};
+            
+            \node (I) at (0+\D+\D,0) {$A$};
+            \node (J) at (5+\D+\D,0) {$B$};
+            \node (K) at (0+\D+\D,-3) {$A$};
+            \node (L) at (5+\D+\D,-3) {$B$};
+
+            \draw[->] (J) -- (I) node[midway, above] {$f$};
+            \draw[->] (L) -- (J) node[midway, right] {$\Sbold_B$};
+            \draw[->] (K) -- (I) node[midway, left] {$\Sbold_A$};
+            \draw[->] (L) -- (K) node[midway, below] {$f$};
+        \end{tikzpicture}
+    \end{figure}
+    Die (Unter-)Kategorie der (kommutativen) Hopf-Algebren über $k$ heiße $\Hopf_k$. 
+\end{definition}
+Die entsprechenden Abbildungen $\Delta, \varepsilon, \Sbold$ dualisieren genau die natürlichen Transformationen $\mu, e, \Ibold$ in der (nachfolgend definierten) Kategorie der affinen Schemata.
+Wir beweisen nun formal das im Abstract erwähnte zentrale Theorem.
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Zentrales Resultat}
+ 
+Wir bezeichnen mit $m_R: R\otimes_k R\to R$ die Multiplikation der $k$-Algebra $R\in\Comm_k$. 
+Für $g,h\in\Comm_k(A,R)$ sei wie im Beweis von \ref{Kartesischer Funktor}
+$\overline{gh} = m_R\circ(g\otimes h): A\otimes_k A\to R,\ a\otimes b\mapsto g(a)h(b)$.
+ 
+\begin{definition}[Affines Schema] \Theorem
+    Wir definieren $\Aff_k$ als \emph{Kategorie der affinen Schemata} über $k$.
+    \begin{enumerate}[label=(\roman*)] 
+        \item Die Objekte sind darstellbare Funktoren $F: \Comm_k \to \Set$ mit $F\cong \Comm_k(A,-)$ für $A\in \Comm_k$.
+        \item Die Morphismen sind natürliche Transformationen $\alpha: F\Rightarrow G$, diese entsprechen genau den $k$-Algebren-Homomorphismen $\Comm_k(A_G, A_F)$ 
+        (wobei $A_G,A_F$ die darstellenden Objekte in $\Comm_k$ sind).
+    \end{enumerate}
+    Falls $G:\Comm_k \to \Grp$ ein Funktor ist, sodass $[U\circ G: \Comm_k \to \Set] \in \Aff_k$, dann heißt $G$ \emph{affines Gruppenschema}. 
+    Für zwei affine Gruppenschemata $G,H: \Comm_k \to \Grp$ sind die Morphismen $\alpha: G\to H$ natürliche Transformationen, deren Komponenten Gruppenhomomorphismen sind.
+    Die entstehende Kategorie über $\Aff_k$ nennen wir $\GrpSch_k$.
+\end{definition}
+
+ 
+ 
+\begin{theorem}[Hauptsatz] \Theorem
+    Sei $A\in\Comm_k$ und $\Delta\in\Comm_k(A,A\otimes_k A)$, $\varepsilon\in\Comm_k(A,k)$, $\Sbold\in\Comm_k(A,A)$.
+    Für jedes $R\in\Comm_k$ definieren wir auf der Menge $\Comm_k(A,R)$ für beliebige $g,h\in\Comm_k(A,R)$:
+    \begin{align*}
+        g\cdot h &:= \overline{gh}\circ\Delta: && A\xrightarrow{\ \Delta\ }A\otimes_k A\xrightarrow{\ g\otimes h\ }R\otimes_k R\xrightarrow{\ m_R\ }R,\\
+        e_R &:= \eta_R\circ\varepsilon: && A\xrightarrow{\ \varepsilon\ }k\xrightarrow{\ \eta_R\ }R,\tag{$*$}\\
+        g\inv &:= g\circ\Sbold: && A\xrightarrow{\ \Sbold\ }A\xrightarrow{\ g\ }R,
+    \end{align*}
+    wobei $\eta_R: k\to R$ die Strukturabbildung nach $R$ ist. Dies sind wieder Elemente von $\Comm_k(A,R)$.
+    \begin{enumerate}[label=(\roman*)]
+        \item Ist $(A,\Delta,\varepsilon,\Sbold)$ eine Hopf-Algebra, so wird $\Comm_k(A,-)$ mit $(*)$ zu einem affinen Gruppenschema.
+        \item Ist umgekehrt $G$ ein affines Gruppenschema mit $U\circ G \cong \Comm_k(A,-)$, so gibt es genau eine Hopf-Algebren-Struktur
+              $(\Delta,\varepsilon,\Sbold)$ auf $A$, sodass die (entlang des Isomorphismus übertragene) Gruppenstruktur von $G$ durch $(*)$ gegeben ist.
+        \item Sind $A,B$ Hopf-Algebren und $\Comm_k(A,-)$, $\Comm_k(B,-)$ wie in (i) affine Gruppenschemata, so ist
+              $$\GrpSch_k\big(\Comm_k(A,-),\Comm_k(B,-)\big)\ \cong\ \Hopf_k(B,A),\qquad \alpha\mapsto\alpha_A(\id_A).$$
+    \end{enumerate}
+    Die Zuordnungen (i) und (ii) sind invers zueinander (bis auf Isomorphie); zusammen mit (iii) ist also $\Hopf_k^{\mathrm{op}}\simeq\GrpSch_k$.
+\end{theorem}
+
+\begin{note}[zum nachfolgenden Beweis]\mbox{}
+    \begin{enumerate}[label=--]
+        \item Durch $(*)$ wird jede Gleichung in der Gruppe $\Comm_k(A,R)$ zu einer Gleichung von $k$"=Algebren"=Homomorphismen auf $A$.
+        \item Umgekehrt genügt es, eine solche Gleichung an \emph{universellen Elementen} zu prüfen: Für die Inklusionen
+        $$\iota_1,\iota_2: A\to A\otimes_k A, \ a\mapsto a\otimes 1 \ \text{ bzw.} \ a\mapsto 1\otimes a\text{, gilt } \overline{\iota_1\iota_2}=\id_{A\otimes A}$$
+    (analog $\overline{\iota_1\iota_2\iota_3}=\id_{A^{\otimes 3}}$), und in $\Comm_k(A,A)$ ist $g=\id_A$ universell.
+    \end{enumerate} 
+\end{note}
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{proof} \mbox{}
+    \begin{enumerate}
+        \item Wir zeigen die Äquivalenz Gruppenaxiome $\Longleftrightarrow$ Hopf-Axiome. \par 
+            Seien $g,h,l\in\Comm_k(A,R)$,
+            $\overline{ghl}: a\otimes b\otimes c\mapsto g(a)h(b)l(c)$ und $\lambda: k\otimes_k A\to A$, $c\otimes a\mapsto ca$.
+            Setzt man $(*)$ ein und wertet auf reinen Tensoren aus, z.B.\
+            $(g\cdot h)\cdot l = m_R\circ\big((\overline{gh}\circ\Delta)\otimes l\big)\circ\Delta = \overline{ghl}\circ(\Delta\otimes\id)\circ\Delta$, so erhält man:
+            \begin{align*}
+                (g\cdot h)\cdot l &= \overline{ghl}\circ(\Delta\otimes\id)\circ\Delta, & g\cdot(h\cdot l) &= \overline{ghl}\circ(\id\otimes\Delta)\circ\Delta, \tag{Assoziativität}\\
+                e_R\cdot g &= g\circ\lambda\circ(\varepsilon\otimes\id)\circ\Delta, & g &= g\circ\lambda\circ\lambda\inv, \tag{Eins}\\
+                g\inv\cdot g &= g\circ m_A\circ(\Sbold\otimes\id)\circ\Delta, & e_R &= g\circ \eta_A\circ\varepsilon. \tag{Inverse}
+            \end{align*}
+            Bildlich: Jedes Hopf-Diagramm wird um einen Pfeil nach $R$ verlängert. Die beiden Wege von $A$ (unten rechts) nach $R$ (Mitte)
+            sind genau die beiden Seiten des jeweiligen Gruppenaxioms in $\Comm_k(A,R)$.
+            \vspace{-0.5cm}
+            \begin{center}
+            \resizebox{\linewidth}{!}{\begin{tikzpicture}[node distance = 1cm, auto, scale=0.785]
+                \node (R1) at (2.5, -1.5) {$R$};
+                \node (A) at (0,0) {$A\otimes_k A\otimes_k A$};
+                \node (B) at (5,0) {$A\otimes_k A$};
+                \node (C) at (0,-3) {$A\otimes_k A$};
+                \node (D) at (5,-3) {$A$};
+                \node (N1) at (1.9, -0.6) {$\overline{ghl}$};
+
+                \draw[->] (A) -- (R1) node[midway, right] {};
+                \draw[->] (B) -- (A) node[midway, above] {$\id \otimes \Delta$};
+                \draw[->] (D) -- (B) node[midway, right] {$\Delta$};
+                \draw[->] (C) -- (A) node[midway, left] {$\Delta\otimes\id$};
+                \draw[->] (D) -- (C) node[midway, below] {$\Delta$};
+
+                \def\D{8}
+
+                \node (R2) at (2.5+\D,-1.5) {$R$};
+                \node (E) at (0+\D,0) {$k \otimes_k A$};
+                \node (F) at (5+\D,0) {$A\otimes_k A$};
+                \node (G) at (0+\D,-3) {$A$};
+                \node (H) at (5+\D,-3) {$A$};
+                \node (N2) at (2+\D, -0.6) {$g\circ\lambda$};
+
+                \draw[->] (E) -- (R2) node[midway, left] {};
+                \draw[->] (F) -- (E) node[midway, above] {$\varepsilon\otimes \id$};
+                \draw[->] (H) -- (F) node[midway, right] {$\Delta$};
+                \draw[->] (G) -- (E) node[midway, left] {$\lambda\inv$};
+                \draw[->] (G) -- (E) node[midway, right] {$\cong$};
+                \draw[->] (H) -- (G) node[midway, below] {$\id$};
+
+                \node (R3) at (2.5 +\D+\D,-1.5) {$R$};
+                \node (I) at (0+\D+\D,0) {$A$};
+                \node (J) at (5+\D+\D,0) {$A\otimes_k A$};
+                \node (K) at (0+\D+\D,-3) {$k$};
+                \node (L) at (5+\D+\D,-3) {$A$};
+                \node (N3) at (1.8+\D+\D, -0.6) {$g$};
+
+                \draw[->] (I) -- (R3) node[midway, left] {};
+                \draw[->] (J) -- (I) node[midway, above] {$m_A\circ(\Sbold\otimes \id)$};
+                \draw[->] (L) -- (J) node[midway, right] {$\Delta$};
+                \draw[->] (K) -- (I) node[midway, left] {$\eta_A$};
+                \draw[->] (L) -- (K) node[midway, below] {$\varepsilon$};
+            \end{tikzpicture}}
+            \end{center}
+            $\Longleftarrow$: In jeder Zeile unterscheiden sich die beiden Seiten nur im rechten Faktor, und diese rechten Faktoren sind genau die beiden Wege
+            im zugehörigen Hopf-Diagramm. Also: Hopf-Axiome $\Rightarrow$ Gruppenaxiome (\ref{Gruppe II}) in jedem $\Comm_k(A,R)$.\par
+            $\Longrightarrow$: Setzt man die universellen Elemente ein ($(g,h,l)=(\iota_1,\iota_2,\iota_3)$ in $R=A^{\otimes 3}$ bzw.\ $g=\id_A$ in $R=A$),
+            so bleibt nur der rechte Faktor stehen; die Gruppenaxiome liefern also die Hopf-Axiome.
+
+        \item Beweis von (i). \par 
+            Nach Punkt 1 ist jedes $\Comm_k(A,R)$ eine Gruppe. Für $\varphi\in\Comm_k(R,S)$ ist $\varphi\circ-$ ein
+            Gruppenhomomorphismus, da $\varphi$ multiplikativ und unital ist: $\varphi\circ\overline{gh} = \overline{(\varphi\circ g)(\varphi\circ h)}$ und
+            $\varphi\circ \eta_R = \eta_S$.
+
+        \item Beweis von (ii). \par
+             Ohne Einschränkung sei $U\circ G=\Comm_k(A,-)$ (sonst transportiere man die Gruppenstruktur entlang des
+            Isomorphismus), also $G\varphi=\varphi\circ-$. Wir lesen die Hopf-Struktur an den universellen Elementen ab:
+            $$\Delta := \iota_1\cdot\iota_2\in G(A\otimes_k A),\qquad \varepsilon := e_k\in G(k),\qquad \Sbold := \id_A\inv\in G(A).$$
+            Diese erfüllen $(*)$: Für $g,h\in G(R)$ sind $G(\overline{gh})=\overline{gh}\circ-$, $G(\eta_R)=\eta_R\circ-$ und $G(g)=g\circ-$
+            Gruppenhomomorphismen, und es gilt $\overline{gh}\circ\iota_1 = g$, $\overline{gh}\circ\iota_2 = h$ sowie $g\circ\id_A = g$. Also
+            \begin{align*}
+                g\cdot h &= G(\overline{gh})(\iota_1)\cdot G(\overline{gh})(\iota_2) = G(\overline{gh})(\iota_1\cdot\iota_2) = \overline{gh}\circ\Delta,\\
+                e_R &= G(\eta_R)(e_k) = \eta_R\circ\varepsilon,\\
+                g\inv &= G(g)(\id_A)\inv = G(g)(\id_A\inv) = g\circ\Sbold.
+            \end{align*}
+            Nach Punkt 1 ist $(A,\Delta,\varepsilon,\Sbold)$ eine Hopf-Algebra. Diese ist sogar eindeutig, denn erfüllt auch $(\Delta',\varepsilon',\Sbold')$ die Formeln $(*)$, so folgt an den universellen Elementen
+            $\Delta' = \overline{\iota_1\iota_2}\circ\Delta' = \iota_1\cdot\iota_2 = \Delta$, $\varepsilon' = \eta_k\circ\varepsilon' = e_k = \varepsilon$ (da $\eta_k=\id_k$) und
+            $\Sbold' = \id_A\circ\Sbold' = \id_A\inv = \Sbold$. Damit schließt man ebenfalls, dass (i) und (ii) invers zueinander sind.
+
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        \item Beweis von (iii). \par
+            Nach \ref{Yoneda-Lemma} (in der bekannten expliziten Form) ist jedes natürliche $\alpha:\Comm_k(A,-)\Rightarrow\Comm_k(B,-)$ von der Form
+            $\alpha_R(g) = g\circ f =: f^*_R(g)$ für genau ein $f=\alpha_A(\id_A)\in\Comm_k(B,A)$. Zu zeigen bleibt, dass genau dann alle $\alpha_R$ Gruppenhomomorphismen sind, wenn
+             $f$ ein Hopf-Algebren-Homomorphismus ist. Für $g,h\in\Comm_k(A,R)$ gilt
+            $$\alpha_R(g\cdot h) = \overline{gh}\circ\Delta_A\circ f, \qquad
+            \alpha_R(g)\cdot\alpha_R(h) = \overline{(g\circ f)(h\circ f)}\circ\Delta_B = \overline{gh}\circ(f\otimes f)\circ\Delta_B.$$
+            Wieder unterscheiden sich beide Seiten nur im rechten Faktor. "`$\Leftarrow$"': klar.
+            "`$\Rightarrow$"': Die universellen Elemente $(g,h)=(\iota_1,\iota_2)$ liefern $\Delta_A\circ f = (f\otimes f)\circ\Delta_B$.
+            Da Gruppenhomomorphismen Einselemente und Inverse erhalten, gilt ferner $\eta_R\circ\varepsilon_A\circ f = \eta_R\circ\varepsilon_B$ und
+            $g\circ\Sbold_A\circ f = g\circ f\circ\Sbold_B$; mit $R=k$ bzw.\ $g=\id_A$ folgt $\varepsilon_A\circ f=\varepsilon_B$ und $\Sbold_A\circ f = f\circ\Sbold_B$.
+
+                    \item Äquivalenz. \par
+            Wegen $\psi\circ(g\circ f) = (\psi\circ g)\circ f$ ist $(g\circ f)^* = f^*\circ g^*$ und $\id^*=\id$, also ist
+            $A\mapsto\Comm_k(A,-)$, $f\mapsto f^*$ ein kontravarianter Funktor $\Hopf_k\to\GrpSch_k$.
+            Nach (iii) ist er volltreu, nach (ii) wesentlich surjektiv; also ist er eine Äquivalenz $\Hopf_k^{\mathrm{op}}\simeq\GrpSch_k$.
+        \end{enumerate}''
+\end{proof}
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Beispiele}
+
+Der Beweis von (ii) im Hauptsatz liefert ein Rezept, konkrete Beispiele von Gruppenschemata zu berechnen: Ist $A$ durch Erzeuger und Relationen gegeben, so ist ein
+$g\in\Comm_k(A,R)$ durch die Bilder der Erzeuger festgelegt. Die universellen Elemente $\iota_1,\iota_2\in G(A\otimes_k A)$ sind dann
+die "`generischen"' Elemente $X\otimes 1$ und $1\otimes X$ (für einen Erzeuger $X$), und wir erhalten
+$$\Delta = \iota_1\cdot\iota_2,\qquad \varepsilon = e_k\in G(k),\qquad \Sbold = \id_A\inv\in G(A),$$
+indem wir mit den generischen Elementen in der Gruppe rechnen. Da $\Delta,\varepsilon,\Sbold$ $k$-Algebren-Homomorphismen sind,
+genügt es, sie auf den Erzeugern anzugeben.
+
+\begin{example}[Multiplikative Gruppe] \Theorem
+    Sei $\mathbb{G}_m:\Comm_k\to\Grp$, $R\mapsto R^\times$, $[\varphi: R\to S]\mapsto \varphi|_{R^\times}$. Mit
+    $$A = k[X,X\inv] := k[X,Y]/(XY-1)$$
+    ist $\mathbb{G}_m\cong\Comm_k(A,-)$ durch $g\mapsto g(X)$, denn ein $k$-Algebren-Homomorphismus $A\to R$ ist genau die Wahl eines
+    $r\in R$ mit einem $s\in R$, $rs=1$, also eines $r\in R^\times$ (und $s=r\inv$ ist dann eindeutig).
+    Die Hopf-Struktur lesen wir an den universellen Elementen ab. Unter $\Comm_k(A,A\otimes_k A)\cong(A\otimes_k A)^\times$ entsprechen
+    $\iota_1\leftrightarrow X\otimes 1$ und $\iota_2\leftrightarrow 1\otimes X$. Also:
+    \begin{align*}
+        \Delta &= \iota_1\cdot\iota_2 \ \leftrightarrow\ (X\otimes 1)(1\otimes X) = X\otimes X, && \text{d.h. } \Delta(X) = X\otimes X,\\
+        \varepsilon &= e_k = 1\in k^\times, && \text{d.h. } \varepsilon(X) = 1,\\
+        \Sbold &= \id_A\inv \ \leftrightarrow\ X\inv\in A^\times, && \text{d.h. } \Sbold(X) = X\inv.
+    \end{align*}
+    Daraus folgt automatisch $\Delta(X\inv) = X\inv\otimes X\inv$, $\varepsilon(X\inv)=1$, $\Sbold(X\inv)=X$.
+    Wir prüfen die Hopf-Axiome auf dem Erzeuger $X$ nach:
+    \begin{align*}
+        (\Delta\otimes\id)\Delta(X) &= X\otimes X\otimes X = (\id\otimes\Delta)\Delta(X),\\
+        (\varepsilon\otimes\id)\Delta(X) &= 1\otimes X = \lambda\inv(X),\\
+        m_A(\Sbold\otimes\id)\Delta(X) &= X\inv X = 1 = \eta_A(\varepsilon(X)).
+    \end{align*}
+    Die Formeln $(*)$ geben die bekannte Gruppenstruktur zurück: $$(g\cdot h)(X) = \overline{gh}(X\otimes X) = g(X)\,h(X), \quad e_R(X) = 1, \quad g\inv(X) = g(X)\inv.$$
+\end{example}
+
+\begin{example}[Spezielle lineare Gruppe] \Theorem
+    Sei $\SL_2$ wie in der Einleitung und $A = k[X_{11},X_{12},X_{21},X_{22}]/(X_{11}X_{22}-X_{12}X_{21}-1)$, also
+    $\SL_2\cong\Comm_k(A,-)$ via $g\mapsto\big(g(X_{ij})\big)_{ij}$. Wir schreiben $X = (X_{ij})\in\SL_2(A)$ für die "`generische Matrix"';
+    sie entspricht $\id_A$. In $\SL_2(A\otimes_k A)$ entsprechen
+    $$\iota_1\ \leftrightarrow\ \begin{pmatrix} X_{11}\otimes 1 & X_{12}\otimes 1\\ X_{21}\otimes 1 & X_{22}\otimes 1\end{pmatrix},\qquad
+      \iota_2\ \leftrightarrow\ \begin{pmatrix} 1\otimes X_{11} & 1\otimes X_{12}\\ 1\otimes X_{21} & 1\otimes X_{22}\end{pmatrix}.$$
+    Das Produkt dieser Matrizen liefert das Koprodukt, die Einheitsmatrix $E\in\SL_2(k)$ die Koeins und die inverse Matrix
+    $X\inv = \begin{pmatrix} X_{22} & -X_{12}\\ -X_{21} & X_{11}\end{pmatrix}$ (beachte $\det X = 1$ in $A$) die Koinverse:
+    \begin{align*}
+        \Delta(X_{ij}) &= \sum_{l=1}^2 X_{il}\otimes X_{lj}, \qquad \varepsilon(X_{ij}) = \delta_{ij},\\
+        \Sbold(X_{11}) &= X_{22},\quad \Sbold(X_{22}) = X_{11},\quad \Sbold(X_{12}) = -X_{12},\quad \Sbold(X_{21}) = -X_{21}.
+    \end{align*}
+    Zum Beispiel ist $\Delta(X_{11}) = X_{11}\otimes X_{11} + X_{12}\otimes X_{21}$.
+    Diese Abbildungen sind wohldefiniert, d.h., sie respektieren die Relation $\det X = 1$: Für $\Delta$ ist das die Multiplikativität der Determinante
+    in der kommutativen Algebra $A\otimes_k A$, für $\varepsilon$ ist $\det(E) = 1$ und für $\Sbold$ ist $X_{22}X_{11}-(-X_{12})(-X_{21}) = \det X$.
+    (Alternativ folgt dies direkt aus dem Hauptsatz, da $\iota_1\cdot\iota_2$, $e_k$ und $\id_A\inv$ Elemente der jeweiligen $\SL_2$ sind.)
+
+    Die Hopf-Axiome sind die Gruppenaxiome für Matrizen, gelesen auf der generischen Matrix:
+    \begin{align*}
+        (\Delta\otimes\id)\Delta(X_{ij}) &= \sum_{l,m} X_{il}\otimes X_{lm}\otimes X_{mj} = (\id\otimes\Delta)\Delta(X_{ij}), \tag{$(XY)Z = X(YZ)$}\\
+        (\varepsilon\otimes\id)\Delta(X_{ij}) &= \sum_l \delta_{il}\otimes X_{lj} = 1\otimes X_{ij} = \lambda\inv(X_{ij}), \tag{$E X = X$}\\
+        m_A(\Sbold\otimes\id)\Delta(X_{ij}) &= \sum_l \Sbold(X_{il})X_{lj} = (X\inv X)_{ij} = \delta_{ij} = \eta_A(\varepsilon(X_{ij})). \tag{$X\inv X = E$}
+    \end{align*}
+    Schließlich liefert $(*)$ wieder die Matrixmultiplikation: Für $g,h\in\Comm_k(A,R)$ ist
+    $$(g\cdot h)(X_{ij}) = \overline{gh}\Big(\sum_l X_{il}\otimes X_{lj}\Big) = \sum_l g(X_{il})\,h(X_{lj}) = \big(g(X)\cdot h(X)\big)_{ij},$$
+    wobei $g(X) := \big(g(X_{ij})\big)_{ij}\in\SL_2(R)$.
+\end{example}
+
+
+
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Gruppentheorie in Hopf-Algebren}
+
+Mit den Erkenntnissen, die wir durch die Theorie der Hopf-Algebren erlangt haben, könnten wir versuchen, jede allgemeine Aussage über Gruppen auf eine Aussage über Hopf-Algebren zurückzuführen. Gilt eine Gruppenidentität in allen $G(R)$,
+so übersetzt sie sich mit $(*)$ in eine Gleichung von $k$-Algebren-Homomorphismen auf $A$; Einsetzen der universellen Elemente
+(wie im Beweis von \ref{Hauptsatz}) liefert dann die Aussage über $A$. Dabei verwenden wir folgendes Wörterbuch (die Pfeile drehen sich um):
+\begin{center}
+    \renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{Y||Y}
+    Gruppenschema $G=\Comm_k(A,-)$ & Hopf-Algebra $A$\\ \hline
+    Multiplikation $\mu$, Eins $e$, Inverse $\Ibold$ & $\Delta$, $\varepsilon$, $\Sbold$\\
+    Diagonale $g\mapsto(g,g)$ & Multiplikation $m_A$ \quad (denn $\overline{gg}=g\circ m_A$)\\
+    Vertauschung $(g,h)\mapsto(h,g)$ & $\tau: a\otimes b\mapsto b\otimes a$ \quad (denn $\overline{hg}=\overline{gh}\circ\tau$)\\
+    $G\to\{*\}$ & $\eta_A: k\to A$
+\end{tabularx}
+\end{center}
+Wir schreiben $\Delta(a)=\sum a_{(1)}\otimes a_{(2)}$. Die Hopf-Axiome lauten dann
+$$(\Delta\otimes\id)\Delta=(\id\otimes\Delta)\Delta,\quad \sum\varepsilon(a_{(1)})a_{(2)}=a, \quad \sum\Sbold(a_{(1)})a_{(2)}=\varepsilon(a)$$
+
+\begin{corollary}[Rechtsneutral und Rechtsinvers] \Theorem
+    In jeder Hopf-Algebra $A\ni a$ gilt $$\sum a_{(1)}\varepsilon(a_{(2)}) = a \quad \text{und}\quad \sum a_{(1)}\Sbold(a_{(2)}) = \varepsilon(a)$$
+\end{corollary}
+\begin{proof}
+    In jeder Gruppe $G(R)$ gilt $g\cdot e_R = g$ und $g\cdot g\inv = e_R$. Nach $(*)$ ist
+    $(g\cdot e_R)(a) = \sum g(a_{(1)})\varepsilon(a_{(2)})$ und $(g\cdot g\inv)(a) = \sum g(a_{(1)})g(\Sbold(a_{(2)}))$.
+    Mit $R=A$, $g=\id_A$ folgt die Behauptung.
+\end{proof}
+
+\begin{corollary}[Kommutativität] \Theorem 
+    Es gilt die Äquivalenz
+    $$\text{$G$ ist kommutativ (d.h.\ alle $G(R)$ abelsch)} \quad \iff \quad \text{$A$ ist \emph{kokommutativ} (d.h.\ $\tau\circ\Delta=\Delta$)}$$
+\end{corollary}
+\begin{proof}
+    $h\cdot g = \overline{hg}\circ\Delta = \overline{gh}\circ\tau\circ\Delta$, während $g\cdot h = \overline{gh}\circ\Delta$.
+    "`$\Leftarrow$"' ist damit klar, "`$\Rightarrow$"' folgt mit $(g,h)=(\iota_1,\iota_2)$, da $\overline{\iota_1\iota_2}=\id$.
+\end{proof}
+
+\begin{note}[Ein Vergleich]
+    Bei $\mathbb{G}_m$ gilt $\Delta(X) = X\otimes X$, also $\tau\circ\Delta = \Delta$ für die Vertauschung $\tau(a\otimes b) = b\otimes a$:
+    $A$ ist \emph{kokommutativ}, passend dazu, dass $R^\times$ abelsch ist. Bei $\SL_2$ ist dagegen
+    $\tau\Delta(X_{11}) = X_{11}\otimes X_{11} + X_{21}\otimes X_{12} \neq \Delta(X_{11})$, passend dazu, dass $\SL_2(R)$ für $k\neq 0$ im Allgemeinen nicht abelsch ist.
+\end{note}
+
+\begin{corollary}[Quadrieren] \Theorem
+    Gilt $\sum a_{(1)}a_{(2)} = \varepsilon(a)$ für alle $a\in A$ (d.h.\ $m_A\circ\Delta = \eta_A\circ\varepsilon$), so ist $A$ kokommutativ.
+\end{corollary}
+\begin{proof}
+    Quadrieren ist $\mu\circ\mathrm{diag}$, also $g^2 = \overline{gg}\circ\Delta = g\circ m_A\circ\Delta$. Die Voraussetzung besagt
+    $g^2 = g\circ\eta_A\circ\varepsilon = e_R$ für alle $g\in G(R)$. Dann ist jedes $G(R)$ abelsch:
+    $gh = gh(hg)^2 = gh^2ghg = g^2hg = hg$. Mit \ref{Kommutativität} folgt die Behauptung.
+\end{proof}
+\begin{note} Man beachte, dass eine konkrete Rechnung in $A$ für diese Korollare nie nötig ist; der Hopf-Satz ist eine rein formale Konsequenz des Gruppensatzes.
+\end{note}
+
+\begin{note} Eine naheliegende, wenn auch unscharfe Frage an jede neue Struktur lautet: Welcher ihrer Bestandteile ist der entscheidende?
+    Und tatsächlich lässt sich für Hopf-Algebren dazu eine Aussage treffen. Das Koprodukt ist der zentrale Baustein 
+    einer Hopf-Algebra. Ist nämlich ein solches $\Delta\in\Comm_k(A,A\otimes_k A)$ derart, dass $g\cdot h := \overline{gh}\circ\Delta$ jedes $\Comm_k(A,R)$ zu einer Gruppe macht, so
+    ist dies bereits das $\Delta$ aus \ref{Hauptsatz}\,(ii) und die $\varphi\circ-$ sind wie im Beweis von (i) automatisch Gruppenhomomorphismen, also $\Comm_k(A,-)$ ein affines
+    Gruppenschema. Nach \ref{Hauptsatz}\,(ii) gibt es eindeutige $\varepsilon,\Sbold$, die $A$ zur Hopf-Algebra machen.
+    Ein Beispiel dafür liefert $\mathrm{GL}_n$, dargestellt durch $k[X_{11},\dots,X_{nn},1/\det]$. Wissen wir abstrakt, dass Matrizen mit
+    invertierbarer Determinante eine Gruppe bilden, so existiert $\Sbold$ -- d.h.\ die Einträge der inversen Matrix sind
+    Polynome in den $X_{ij}$ und $1/\det$. Die Cramersche Regel ist also a priori klar (für $\SL_2$ haben wir $\Sbold$ explizit gesehen).
+\end{note}
+
+\subsection{Ausblick: Basiswechsel}
+    Sei $k\to k'$ ein Ringhomomorphismus (z.B.\ $\mathbb{Z}\to\mathbb{Q}$, $\mathbb{R}\to\mathbb{C}$ oder $\mathbb{Z}\to\mathbb{F}_p$).
+    Jede $k'$-Algebra $S$ ist durch $k\to k'\to S$ auch eine $k$-Algebra, also lässt sich jeder Funktor $F:\Comm_k\to\Set$
+    auf $\Comm_{k'}$ einschränken und wir bezeichnen diese Einschränkung als $F_{k'}$. Dann folgt recht unmittelbar:
+    \begin{enumerate}[label=--]
+        \item Ist $F\cong\Comm_k(A,-)$, so wird $F_{k'}$ durch $A' := A\otimes_k k'$ dargestellt, denn für jede $k'$-Algebra $S$ gilt
+              $$\Comm_{k'}(A\otimes_k k', S)\ \cong\ \Comm_k(A,S),\qquad \varphi\mapsto \varphi\circ(a\mapsto a\otimes 1).$$
+              Basiswechsel entspricht also dem Tensorprodukt. Konkret ist $A'$ die $k'$-Algebra zu \emph{denselben Gleichungen}, z.B.\
+              $k[X_{ij}]/(\det X - 1)\otimes_k k' \cong k'[X_{ij}]/(\det X - 1)$.
+        \item Ist $G$ ein affines Gruppenschema mit Hopf-Algebra $(A,\Delta,\varepsilon,\Sbold)$, so ist $G_{k'}$ wieder eines, und
+              $A'$ trägt die Hopf-Struktur $\Delta\otimes\id_{k'}$, $\varepsilon\otimes\id_{k'}$, $\Sbold\otimes\id_{k'}$
+              (mit $(A\otimes_k k')\otimes_{k'}(A\otimes_k k')\cong(A\otimes_k A)\otimes_k k'$).
+              Für $\mathbb{G}_m$ und $\SL_2$ gelten also über $k'$ wörtlich dieselben Formeln für $\Delta,\varepsilon,\Sbold$ wie über $k$.
+        \item Interessant wird Basiswechsel dadurch, dass verschiedene Gruppenschemata nach Basiswechsel isomorph werden können:
+              Die Kreisgruppe $\{x^2+y^2=1\}$ mit $(x,y)(x',y') = (xx'-yy',\ xy'+yx')$ ist über $\mathbb{R}$ nicht isomorph zu
+              $\mathbb{G}_m$, wird es aber über $\mathbb{C}$ mittels $(x,y)\mapsto x+iy$.
+    \end{enumerate}
+\newpage
+
+
+
+
+
+
+
+
+\section*{Konventionen und Abkürzungen} \addcontentsline{toc}{section}{Konventionen und Abkürzungen}
+\vspace{-10pt}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabularx}{\textwidth}{>{\raggedleft\arraybackslash}p{2.5cm}||X}
+        $k$ & stets ein kommutativer Ring \\
+        Algebra & stets kommutative $k$-Algebra \\
+        Hopf-Algebra & stets kommutative Hopf-Algebra \\
+        $\otimes$ & Tensorprodukt über $k$, d.h.\ stets $\otimes_k$ \\
+        $A^{\otimes n}$ & $A\otimes\dots\otimes A$ mit $n$ Faktoren \\
+        $\Comm_k$ & Kategorie der kommutativen $k$-Algebren \\
+        $\Set$, $\Grp$ & Kategorie der Mengen bzw.\ der Gruppen \\
+        $U$ & Vergissfunktor $\Grp\to\Set$, der eine Gruppe auf ihre zugrundeliegende Menge schickt \\
+        $\Comm_k(A,R)$ & Menge der $k$-Algebren-Homomorphismen $A\to R$ \\
+        $F\Rightarrow G$ & natürliche Transformation zwischen den Funktoren $F$ und $G$ \\
+        $\Nat(F,G)$ & Menge der natürlichen Transformationen $F\Rightarrow G$ \\
+        $\1$ & konstanter Funktor $R\mapsto\{*\}$, dargestellt durch $k$ \\
+        $F\varphi$ & Bild von $\varphi\in\Comm_k(R,S)$ unter einem Funktor $F$ (bei anderen Argumenten mit Klammern, z.B.\ $G(\overline{gh})$) \\
+        $\varphi\circ-$ & Postkomposition $\Comm_k(A,R)\to\Comm_k(A,S)$, d.h.\ $\Comm_k(A,-)$ angewandt auf $\varphi$ \\
+        $f^*$ & Präkomposition $-\circ f:\Comm_k(A,-)\Rightarrow\Comm_k(B,-)$ zu $f\in\Comm_k(B,A)$ (\ref{Yoneda-Lemma}) \\
+        $m_R$ & Multiplikation $R\otimes R\to R$ \\
+        $\eta_R$ & Strukturabbildung $k\to R$ (insbesondere $\eta_k=\id_k$) \\
+           $\overline{gh}$ & $m_R\circ(g\otimes h): a\otimes b\mapsto g(a)h(b)$, analog $\overline{ghl}$ \\
+        $\iota_1$, $\iota_2$, $\iota_3$ & kanonische Inklusionen $a\mapsto a\otimes 1$, $a\mapsto 1\otimes a$ (bzw.\ in $A^{\otimes 3}$); \emph{universelle Elemente} \\
+        $\lambda$ & kanonischer Isomorphismus $k\otimes A\to A$, $c\otimes a\mapsto ca$ \\
+        $\tau$ & Vertauschung $a\otimes b\mapsto b\otimes a$ \\
+        $\mu$, $e$, $\Ibold$ & Multiplikation, Einselement, Inversion einer Gruppe bzw.\ eines Gruppenfunktors \\
+        $e_R$ & Einselement der Gruppe $G(R)$ bzw.\ $\Comm_k(A,R)$, d.h.\ $e_R=\eta_R\circ\varepsilon$ (nicht zu verwechseln mit $1\in R$) \\
+        $\Delta$, $\varepsilon$, $\Sbold$ & Koprodukt, Koeins, Koinverse (Antipode) einer Hopf-Algebra \\
+        $(*)$ & Gruppenstruktur auf $\Comm_k(A,R)$ aus $(\Delta,\varepsilon,\Sbold)$, siehe \ref{Hauptsatz} \\
+        $\sum a_{(1)}\otimes a_{(2)}$ & Sweedler-Notation für $\Delta(a)$ \\
+        $\Aff_k$ & Kategorie der affinen Schemata über $k$ (darstellbare Funktoren $\Comm_k\to\Set$) \\
+        $\GrpSch_k$ & Kategorie der affinen Gruppenschemata über $k$ \\
+        $\Hopf_k$ & Kategorie der (kommutativen) Hopf-Algebren über $k$ mit Hopf-Algebren-Homomorphismen \\
+        $\mathbb{G}_m$, $\SL_2$ & multiplikative Gruppe $R\mapsto R^\times$ bzw.\ spezielle lineare Gruppe \\
+        $E$, $\delta_{ij}$ & Einheitsmatrix bzw.\ Kronecker-Delta \\
+        $F_{k'}$ & Einschränkung von $F$ auf $k'$-Algebren (Basiswechsel) \\
+        § \label{book} & Waterhouse, William C. Introduction to Affine Group Schemes. Graduate Texts in Mathematics 66. New York: Springer-Verlag, 1979. ISBN 978-1-4612-6219-0, \href{https://doi.org/10.1007/978-1-4612-6217-6}{doi:10.1007/978-1-4612-6217-6} \\
+ \end{tabularx}
+\end{table}
+\end{document}
