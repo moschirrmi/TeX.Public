@@ -1,0 +1,722 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[style=script-v1, privacy=anonym]{../tools/library}
+
+\def\SigAlg{$\sigma$-Algebra }
+
+\renewcommand{\Lecturer}{Prof. R. Schilling}
+
+\begin{document}
+\head{AN30: Maß \& Integral}{Wintersemester 2025/2026}
+
+\tableofcontents
+
+\newpage
+
+\section{Einführung}
+
+
+
+
+
+
+\subsection{$\sigma$-Algebren, Dynkin-Systeme und Maße}
+
+\begin{definition}[Sigma-Algebra] \Theorem
+Sei $E$ eine Menge. Eine Familie $\mathscr{A} \subseteq \mathscr{P}(E)$ heißt
+$\sigma$-Algebra, wenn gilt:
+
+\begin{enumerate}
+  \item $\emptyset \in \mathscr{A}$
+  \item $A \in \mathscr{A} \;\Rightarrow\; A^{c} \in \mathscr{A}$
+  \item$ (A_n)_{n \in \mathbb{N}} \subseteq \mathscr{A}
+        \;\Rightarrow\; \bigcup_{n=1}^{\infty} A_n \in \mathscr{A}$
+\end{enumerate}
+\end{definition}
+
+\begin{corollary}
+    Sei $\mathscr{A}$ eine $\sigma$-Algebra. Dann gilt weiterhin
+\begin{enumerate}
+  \item $E \in \mathscr{A}$
+  \item $A, B\in \mathscr{A} \;\Rightarrow\; A\setminus B,\; A\cup B,\; A\cap B \in \mathscr{A}$
+  \item$ (A_n)_{n \in \mathbb{N}} \subseteq \mathscr{A}
+        \;\Rightarrow\; \bigcap_{n=1}^{\infty} A_n \in \mathscr{A}$
+\end{enumerate}
+\end{corollary}
+
+\begin{theorem}
+     Sei $(\mathscr{A}_i)_{i\in \N} $ abzählbar viele $\sigma$-Algebren über gleichem Grundraum E. Dann gilt:
+
+     \begin{enumerate}
+         \item $\mathscr{A} = \bigcap _{i\in \N} \mathscr{A}_i$ ist eine $\sigma$-Algebra.
+         \item $\forall \mathscr{G} \subset \mathscr{P}(E)$ existiert eine minimale $\sigma$-Algebra $\sigma(\mathscr{G})$
+     \end{enumerate}
+\end{theorem}
+
+
+
+
+
+
+
+
+\begin{definition}[Topologie]\Theorem
+    Eine Familie von Mengen $\mathscr{O}$ heißt Topologie über einem Grundraum $E$, falls gilt:
+
+    \begin{enumerate}
+        \item $\leer, E \in \mathscr{O}$
+        \item $U,V\in \mathscr{O}\Rightarrow U \cap V \in \mathscr{O}$
+        \item $(U_i)_{i\in \N} \subset \mathscr{O} \Rightarrow \bigcup_{i\in \N} U_i \in \mathscr{O}$
+    \end{enumerate}
+    
+\end{definition}
+
+\begin{definition}
+    Sei $\mathscr{O}$ die Topologie der offenen Mengen im $\R^d$, dann ist $\sigma(\mathscr{O}) =: \Borel{\R^d}$ die Borelsche $\sigma$-Algebra. Alle Mengen in $\Borel{\R^d}$ heißen Borel-Mengen.
+\end{definition}
+
+\begin{theorem} Seien $\mathscr{O}, \mathscr{C}, \mathscr{K}$ die offenen, abgeschlossenen und kompakten Mengen im $\R^d$. Es gilt:
+
+$$\Borel{\R^d} = \sigma(\mathscr{O}) = \sigma(\mathscr{C}) = \sigma(\mathscr{K}) $$
+sogar mehr: Die Borel-Mengen werden von offenen oder halboffenen Rechtecken mit rationalen oder irrationalen Intervalllängen erzeugt.
+\end{theorem}
+
+
+
+
+
+
+\begin{definition}[Maß] \Theorem
+    Ein positives Maß $\mu: \A \to [0,\infty]$ ist eine Abbildung mit 
+    \begin{enumerate}
+        \item $\A$ ist \SigAlg
+        \item $\mu(\leer) = 0$
+        \item $(A_i)_{i\in\N} \subset \A$ paarweise disjunkt, dann ist $\mu(\bigsqcup_{i\in \N} A_i) = \sum_{i\in \N} \mu (A_i) $
+    \end{enumerate}
+Falls $\mu$ nur $2,3$ erfüllt, dann heißt $\mu$ Prämaß.
+\end{definition}
+
+\begin{definition}
+    Sei $\mu$ Maß auf $E$ mit \SigAlg $\A$. Dann heißt:
+    \begin{enumerate}
+        \item $(E, \A)$ Meßraum
+        \item $(E, \A, \mu$ Maßraum
+        \item $\mu(E)<\infty$ endliches Maß
+        \item $\mu(E)=1$ W-Maß
+        \item $\exists (A_i)_{i\in \N} \subset \A$ mit $A_i \uparrow E$ und $\mu(A_i) < \infty \; \forall i\in \N$ $\sigma$- endliches Maß
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[Eigenschaften von Maßen] \Theorem
+    Sei $(E,\A,\mu)$ Maßraum, dann gilt $\forall A,B\in \A$ und $A_i, B_i \subset \A$:
+
+    \begin{enumerate}
+        \item $A\cap B = \leer \Rightarrow \mu(A \cup B) = \mu(A)+\mu(B)$
+        \item $A\subset B \Rightarrow \mu(A)\leq \mu(B)$
+        \item $A\subset B, \mu(A)< \infty \Rightarrow \mu(B\setminus A) = \mu(B)-\mu(A)$
+        \item $\mu(A\cup B) + \mu(A\cap B) = \mu(A) +\mu(B)$
+        \item $\mu(A\cap B) \leq \mu(A)+\mu(B)$
+        \item $A_i \uparrow A:= \bigcup_{i\in\N} \Rightarrow \mu(A) = \sup_{i\in \N} \mu(A_i) = \lim_{i\in \N} \mu(A_i)$
+        \item $B_i \downarrow B \; \& \; \mu(B_1) <\infty:= \bigcap_{i\in \N} B_i \Rightarrow \mu(B) = \inf_{i\in \N}\mu(B_i) =\lim_{i\in \N}   \mu(B_i) $
+        \item $\mu(\bigcup_{i\in \N} A_i) \leq \sum_{i\in\N} \mu(A_i)$
+    \end{enumerate}
+\end{theorem}
+
+\begin{definition}
+    Das $d$-dim. Lebesgue-Maß $\lambda^d$ ist definiert als
+    $$\lambda^d: \Borel{\R^d} \to [0,\infty]$$
+    und es gilt:
+    \begin{enumerate}
+        \item $\lambda^d(x+B) = \lambda^d(B), \; x\in \R^s$ (translationsinvariant)
+        \item $\lambda^d(R^-1(B)) = \lambda(B)$, wobei $R\in O(d,\R)$ (bewegungsinvariant)
+        \item $\lambda^d(M^{-1}(B))= \lambda^d(B) \cdot |\det(M)|\r$
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    Sei $(E,\A)$ Meßraum, $\mu: \A \to \infty$ endlich additive Mengenfunktion mit $\mu(\leer) = 0, \mu(E)<\infty$. Dann ist $\mu$ genau dann ein Maß, falls eine der drei Dinge erfüllt ist:
+
+\begin{enumerate}
+    \item $\mu$ ist stetig von oben, $A_i \uparrow A:= \bigcup_{i\in\N} \Rightarrow \mu(A_i)\uparrow \mu(B_i)$
+    \item $\mu$ ist stetig von unten, $A_i \downarrow A:= \bigcap_{i\in\N} \Rightarrow \mu(A_i)\downarrow \mu(B_i)$
+    \item $\mu$ ist stetig bei ''Null'': wie 2) nur $B= \emptyset$
+\end{enumerate}
+\end{lemma}
+
+
+
+
+
+
+\begin{definition}[Dynkin-System]\Theorem
+    Eine Familie $\mathscr{D}\subset \pot(E)$ heißt Dynkin-System, falls
+
+    \begin{enumerate}
+        \item $E\in \mathscr{D}$
+        \item $D\in \mathscr{D} \Rightarrow D^C \in \mathscr{D}$
+        \item $D_{i\in \N}$ paarweise disjunkt $\Rightarrow \bigsqcup_{i\in \N} D_i \in \mathscr{D}$ (schwächer als \SigAlg)
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    Für alle $\mathscr{G}\subset \pot(E)$ existiert ein minimales Dynkin-System $\mathscr{D}$ mit $\mathscr{G}\subset \mathscr{D}$ (schreibe $\mathscr{D}=: \delta(\mathscr{G})$). Weiterhin
+    $$\mathscr{G}\subset \delta(\mathscr{G}) \subset \sigma(\mathscr{G})$$
+\end{theorem}
+
+\begin{lemma}
+    $\mathscr{D}$ Dynking-System und $\cap$-stabil $ \Leftrightarrow $ $\mathscr{D}$ ist \SigAlg
+\end{lemma}
+
+\begin{lemma}
+    $\mathscr{G}\subset \pot(E)$ und $\cap$-stabil $\Rightarrow$ $\delta(\mathscr{G})= \sigma(\mathscr{G})$
+\end{lemma}
+
+
+
+
+
+
+
+
+
+\begin{theorem}[Eindeutigkeit von Maßen] \Theorem
+    Sei $(E,\A)$ ein Meßraum, $\mu, \nu$ Maße auf $\A = \sigma(\mathscr{G})$ mit 
+    \begin{enumerate}[label = \alph*)]
+        \item $\mathscr{G}$ ist $\cap$-stabil
+        \item $\exists (G_i)_{i\in \N} \subset \mathscr{G},\; G_i \uparrow E$ und $\mu(G_i) < \infty, \nu(G_i) < \infty, \; \forall i\in \N$
+    \end{enumerate}
+Dann gilt: 
+ $$\mu |_{\mathscr{G}} =\nu |_{\mathscr{G}} \Rightarrow \mu |_{\sigma(\mathscr{G})} =\nu |_{\sigma(\mathscr{G})}$$
+
+\end{theorem}
+
+
+
+
+
+
+\begin{definition} \label{def:Halbringe}
+    Eine Familie von Mengen $\mathscr{S}\subset \pot(E)$ heißt Halbring über $E$, falls 
+    \begin{enumerate}
+        \item $\leer \in \mathscr{S}$
+        \item $S,T\in \mathscr{S} \Rightarrow S\cap T\in \mathscr{S}$
+        \item $\forall S,T\in \mathscr{S}\; \exists S_1,...,S_m\in \mathscr{S}, \; m<\infty,$ paarweise disjunkt, sodass $S\setminus T = \bigsqcup_{i=1}^m S_i = \mathscr{S}$
+    \end{enumerate}
+\end{definition}\bigskip
+
+\begin{theorem}[Carathéodory] \Theorem
+Sei $\mathscr{S}$ ein Halbring auf $E$ und sei $\mu: \mathscr{S}\to [0,\infty]$ Prämaß, d.h.
+\begin{enumerate}[label = \alph*)]
+    \item $\mu(\leer) = 0$
+    \item $\mu(\bigsqcup_{i\in\N} S_i) = \sum_{i\in \N} \mu(S_i) \; \forall S_i\in \mathscr{S}$ pw. disjunkt (also auf $\mathscr{S}$ $\sigma$-additiv)
+\end{enumerate}
+Dann existiert eine Fortsetzung von $\mu$ auf $\sigma(\mathscr{S})$, sodass $\mu$ ein Maß ist. Falls zusätzlich Satz \ref{Eindeutigkeit von Maßen} b) erfüllt ist, dann ist diese Fortsetzung sogar eindeutig.
+\end{theorem}
+
+
+
+
+\newpage
+\section{Meßbarkeit}
+
+\subsection{Meßbare Abbildungen}
+\begin{definition}[Meßbare Abbildung] \Theorem
+    Seien $(E,\A), (E,\A')$ zwei Meßräume. Eine Abbildung $T: E \to E'$ heißt $\A / \A'$ -meßbar, falls
+    $$\forall A' \in \A': \; T\r(A')\in \A' \quad \text{bzw.} \quad T\r(\A')\subset \A $$
+\end{definition}
+
+\begin{lemma}
+    Sei $\A'=\sigma(\mathscr{G'})$ für $\mathscr{G'}\subset \pot(E') $. Dann gilt:
+
+    $$T: \A \to \A' \text{ ist $ \A / \A'$ -mb.} \Longleftrightarrow \forall G'\in \mathscr{G'}: T\r(G')\in \A$$
+
+    Es reicht also $T$ am Erzeuger zu untersuchen.
+\end{lemma}
+
+\begin{corollary}
+    Seien $S,T: \A \to \A'$ meßbare Funktionen. Dann ist
+    $$S+T, S\cdot T, S\circ T$$
+    wieder meßbar. 
+\end{corollary}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{Bildmaß} Sei $T:(E,\A) \to (E',\A')$ eine meßbare Abbildung und $\nu$ ein Maß auf $(E,A)$. Dann definiert 
+$$\mu(A') = \nu(T\r(A'))$$
+ein Maß auf $(E,\A')$. Dieses nennen wir Bildmaß von $\nu$ unter $T$ (schreibe $T(\nu), \nu \circ T\r )$
+
+\end{theorem}
+
+
+\subsection{Existenz und Eigenschaften meßbarer Funktionen}
+\begin{definition}
+    Eine Funktion $u: E\to \R$ heißt meßbar, falls $u:(E,\A) \to (\R, \Borel \R)$ eine $\A / \Borel \R $- meßbare Abbildung ist. Schreibe:
+    \begin{itemize}[label = -]
+        \item $\{u\in B\} = \{x\in E| u(x)\in B\} = u\r(B)$
+        \item $\{u\geq w\} = \{x\in E| u(x)\geq w(x)\}$ (analog $>,\leq,<,=,\neq$)
+        \item $\{u\geq \alpha\} = \{x\in E| u(x)\geq \alpha\} = u\r([\alpha, \infty))$ (analog $>,\leq,<,=,\neq$)
+    \end{itemize}
+\end{definition}
+
+\begin{lemma} \Xlabel{Lemma}{subsub}{Meßbarkeitskriterium}
+$u: (E,\A)\to (\R, \Borel \R)$ ist genau dann meßbar, falls eine der folgenden Bedingungen erfüllt ist.
+\begin{enumerate}
+    \item $\{u> \alpha\}\in \A$
+    \item $\{u\geq \alpha\}\in \A$
+    \item $\{u\leq \alpha\}\in \A$
+    \item $\{u< \alpha\}\in \A$
+\end{enumerate}
+für alle $\alpha$ aus $\R, \Q$ oder einer anderen dichten Teilmenge aus $\R$.
+\end{lemma}
+
+\begin{definition}
+    $\RT:=\R \cup \{\pm \infty\}$ ist die Zwei-Punkt-Kompaktifizierung von $\R$. Es übertragen sich die Begriffe:
+    \begin{itemize}[label=-]
+        \item $\Borel \RT := \sigma(\Borel \R, \{ \leer,\{\infty\},\{-\infty\},\{\pm\infty\}\})$
+        \item $\Borel \R = \R \cap \Borel \RT$ Spur-\SigAlg
+        \item $\Borel \RT$ wird erzeugt durch $[a,\infty]$, $a\in \R / \Q$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    Es sind $\LNull{\A}$ bzw. $\LNullRT{\A}$ die Mengen der meßbaren bzw. $\RT$-wertig meßbaren Funktionen $u:(E,\A)\to (\R, \Borel \R) / (\RT, \Borel \RT)$. Wir schreiben auch $\LNullPlus{\A}$ für diejedingen $u$'s die positiv und meßbar sind.
+\end{definition}
+
+\begin{definition} Die Menge der einfachen Funktionen $\mathscr{E}(\A)$ ist definiert durch
+$$\mathscr{E}(\A) := \left\{g\in \LNull{\A} | \; g(x) = \sum_{i=1}^m y_i \cdot \1 _{A_i}, \; y_i\in \R, \; A_i \in \A \; \text{pw. disjunkt}\right\}$$
+\end{definition}
+
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Sombrero} Sei $u\in \LNullPlus{\A}$. Dann existieren $(f_n)_{n\in\N}\in \mathscr{E}(\A)$ mit $f_n\geq 0, \; f_{n+1} \geq f_n\geq ...$ und $\sup_{n\in\N} f_n = u(x)$. Zusätzlich gilt:
+\begin{enumerate}
+    \item $f_n \to u$ gleichmäßig, falls $|u| < \infty $
+    \item $u:E\to \RT$ ist Limes von $f_n$ mit $|f_n|\leq |u_n|$
+\end{enumerate}
+\end{lemma}
+
+
+
+\begin{corollary}
+    Sei $(u_n)_{n\in \N}\subset \LNullRT{\A}$. Dann gilt:
+    $$\sup_{n\in \N}{u_n},\; \inf_{n\in \N}{u_n},\; \limsup_{n\in \N}{u_n},\; \liminf_{n\in \N}{u_n}\in \LNullRT{\A}$$
+    Falls $\lim_{n\in \N}{u_n}$ existiert, dann auch $\lim_{n\in \N}{u_n} \in \LNullRT{\A}$.
+\end{corollary}
+
+\begin{corollary}\Xlabel{Korollar}{subsub}{Komposition mb. Funktionen}
+Seien $u,v: E\to \RT$ $\A/ \Borel{\RT}$- meßbar, dann ist:
+$$u+v,\; u\cdot v, \; \max\{u,v\},\; \min\{u,v\}$$
+wieder meßbar. Falls $v\r(\{+\infty\})=\leer$, dann auch $u-v$ meßbar.
+\end{corollary}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Faktorisierungslemma}
+Es sei $T:(E,\A) \to (E',\A')$ eine $\A/\A'-$ meßbare Abbildung. Dann ist folgendes äquivalent:
+
+\begin{enumerate}[label = \roman*.]
+    \item $u: E\to \RT$ ist $\sigma(T)/\Borel \RT $- meßbar
+    \item Es existiert ein $w: (E',\A')\to \Borel \RT$ meßbar, sodass $u=w\circ T$.
+\end{enumerate}
+\end{lemma}
+
+
+\subsection{Integral positiv-meßbarer Funktionen}
+
+\begin{definition}
+    Es sei $u\in \LNullRTPlus{\A}$. Das $\mu$-Integral von $u$ ist definiert als:
+    $$\int_E u \d\mu := \sup\{I_\mu(g)\; |\; g\in \mathscr{E}^+(\mathscr{A}), g\leq u\}$$
+    wobei $I_\mu(\sum_{i\in \N} x_i \cdot \1_{A_i}) = \sum_{i\in \N} x_i \mu(A_i)$
+\end{definition}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{Beppo-Levi}
+Sei $(u_n)_{n\in \N} \subset \LNullRTPlus{\mu}$ aufsteigend, also\\ $u_1\leq u_2\leq \cdots$. Dann gilt:
+
+\begin{enumerate}[label=\roman*.]
+    \item $\displaystyle u:= \sup_{n\in\N} u_n = \lim_{n\in \N} u_n$ meßbar und nicht-negativ
+    \item $\displaystyle \int \sup_{n\in \N} u_n \d\mu = \sup_{n\in\N} \int u_n \d\mu \in [0,\infty]$
+\end{enumerate}
+\end{theorem}
+
+\begin{lemma}[Eigenschaften des Integrals] \Theorem
+    Seien $u,w\in \LNullRTPlus{\mu}$, $A\in \A$. Dann gilt:
+    \begin{enumerate}
+        \item $\int \1_A \d\mu$ = $\mu(A)$
+        \item $\int \alpha u \d\mu = \alpha \int u \d\mu$ wobei $\alpha \in \R$ (pos. homogen)
+        \item $\int u+w \d\mu = \int u\d\mu +\int w \d \mu $ (additiv)
+        \item $u\leq w \Longrightarrow \int u \d\mu \leq \int w \d \mu$ (monoton)
+    \end{enumerate}
+\end{lemma}
+
+\begin{lemma}
+    Sei $(w_i)_{i\in \N} \subset \LNullRT{\A}, \; w_i > 0$. Dann gilt
+    $$\sum_{i\in \N} w_i\in \LNullRT{\A} \quad \text{und} \quad \int \sum_{i\in \N} w_i \d\mu = \sum_{i\in \N} \int w_i \d\mu \in [0,\infty]$$
+\end{lemma}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{von Fatou} Sei $(u_i)_{i\in \N} \subset \LNullRT{\A}, \; u_i \geqslant 0$. Dann ist 
+$$u:= \liminf_{i\in\N} u_i \in \LNullRT{\A} \quad \text{und}\quad \int \liminf_{i\in\N} u_i \d\mu \leqslant \liminf_{i\in\N}  \int u_i \d\mu \in [0,\infty]$$
+\end{lemma}
+
+
+\subsection{Integral meßbarer Funktionen}
+
+\begin{definition}
+    Eine Funktion $u:E\to \RT$ heißt $\mu-$integrierbar, falls 
+    \begin{enumerate}
+        \item $u\in \LNullRT{\A}$
+        \item $\int \max\{u,0\}\d\mu$, $\int \min\{u,0\}\d\mu <\infty $
+    \end{enumerate}
+    Dann heißt $$\int u \d\mu := \int \max\{u,0\}\d\mu -\int \min\{u,0\}\d\mu$$ das $\mu-$Integral. Wir bezeichnen mit 
+    $$\LEinsRT{E,\A,\mu}$$
+    den Raum aller $\RT-$wertig $\mu-$integrierbaren Funktionen
+    
+\end{definition}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Integrabilitätskriterium}
+Sei $u\in \LNullRT{\A}$. Dann ist äquivalent
+\begin{enumerate}[label=\alph*)]
+    \item $u\in\LEinsRT{\mu}$
+    \item $u^+:= \max\{u,0\}, u^-:= \min\{u,0\} \in \LEinsRT{\mu}$
+    \item $|u| \in \LEinsRT{\mu}$
+    \item $\exists w\in \LEinsRT{\mu}, w\geqslant 0$ mit $|u|\leqslant w$
+\end{enumerate}
+    
+\end{theorem}
+
+\begin{corollary} Seien $u,w\in \LEinsRT{\mu}, \alpha \in \R$. Dann
+\begin{enumerate}
+    \item $\alpha u \in \LEinsRT{\mu}$ und $\int \alpha u \d\mu = \alpha\int u \d\mu$ (homogen)
+    \item $u+w\in \LEinsRT{\mu}$ und $\int u+w \d\mu = \int u \d\mu +\int w \d\mu$ (additiv)
+    \item $\max\{u,w\} \min\{u,w\}\in \LEinsRT{\mu}$ (Verband)
+    \item $u\leq w \Rightarrow \int u\d\mu \leqslant \int w\d\mu$ (monoton)
+    \item $\mid \int u \d\mu \mid \leqslant \int \mid u\mid \d\mu $ (Dreiecksungleichung)
+\end{enumerate}
+\end{corollary}
+
+\begin{definition} Sei $u\in \LEinsRT{\mu}$ oder $\LNullRTPlus{\A}$. Dann ist
+$$\int_A u \d\mu := \int u(x)\1_A(x) \mu(dx)$$
+\end{definition}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Dichtemaß}
+Sei $u\in \LNullRTPlus{\A}$. Dann ist für alle $A\in \A$
+$$A\mapsto \nu(A):= \int_A u \d\mu$$
+ein Maß (mit Dichte $u$) auf $(E,\A)$
+\end{lemma}
+\newpage
+\section{$\mu-$Integrabilität}
+
+\subsection{Nullmengen}
+
+\begin{definition} Es sei $(E,\A, \mu)$ ein Maßraum. 
+\begin{enumerate}
+    \item Wir bezeichenen mit $\Null_\mu :=\{N\in \A \mid \mu (N) = 0\}$ die meßbaren $\mu-$Nullmengen 
+    \item Eine Eigenschaft $\Pi(x)$ gilt $\mu-$fast-überall ($\mu$-fü), wenn $$\{x\in E\mid \Pi(x) \text{ gilt nicht}\}\subset N\in \Null_\mu$$
+\end{enumerate}
+\end{definition}
+
+\begin{theorem} Sei $u\in \LNullRT{\A}$. Dann ist 
+\begin{enumerate}[label=\alph*)]
+    \item $\int|u|\d\mu = 0 \Longleftrightarrow |u| = 0 \ \ \mu-$fü $\Longleftrightarrow \mu\{u\neq 0\}=0$
+    \item $N\in \Null_\mu \Longrightarrow \int_N u\d\mu = 0$
+\end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    Es seien $u,w\in \LNullRT{\A}$ und $u=w$ $\mu-$fü. Dann gilt
+    \begin{enumerate}[label=\alph*)]
+        \item $u,w\geqslant 0 \Longrightarrow \int u \d\mu = \int w \d\mu \in [0,\infty]$
+        \item $u\in\LEinsRT{\mu}\Longleftarrow w\in \LEinsRT{\mu}$ und $\int u \d\mu = \int w \d\mu$
+    \end{enumerate}
+\end{corollary}
+\begin{corollary}
+Seien $u\in \LNullRT{\A}, w\in \LEinsRT{\mu}$. Dann gilt 
+$$|u|\leq w \ \ \mu-\text{fü} \Longrightarrow u\in \LEinsRT{\mu}$$
+\end{corollary}
+
+\begin{corollary}\Xlabel{Korollar}{subsub}{Markov-Ungleichung}
+Für $u\in\LEinsRT{\mu}, A\in \A, c>0$
+\begin{enumerate}
+    \item $\mu(\{|u|>c\} \cap A) \leq \frac 1 c \int_A |u|\d\mu$
+    \item $\mu(\{|u|>c\} ) \leq \frac 1 c \int |u|\d\mu$
+\end{enumerate}
+\end{corollary}
+
+\begin{corollary}
+    Für jedes $u\in \LEinsRT{\mu}$ existiert ein $\Tilde{u}\in \LEins{\mu}$ $\R-$wertig mit $u=\Tilde{u}$ $\mu-$fü (Jedes integrierbare $\RT-$wertige $u$ ist auf Nicht-Null-Mengen reellwertig)
+\end{corollary}
+
+
+
+ 
+\subsection{Konvergenzsätze}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{über monotone Konvergenz} 
+\begin{enumerate}[label=\alph*)]
+    \item Sei $(u_n)_{n\in\N} \subset \LEins{\mu}$ mit $u_1\leq \cdots \leq u:= \sup_{n\in \N} u_n$ $(u_n\uparrow u)$. Dann gilt
+    $$u\in \LEinsRT{\mu} \Longleftrightarrow \sup_{n\in\N}\int u_n \d\mu < \infty $$
+    genauso wie 
+    $$\int u\d\mu = \int \sup_{n\in\N} u_n\d\mu =  \sup_{n\in\N}\int u_n\d\mu$$
+    \item $(w_n)_{n\in\N} \subset \LEins{\mu}$ mit $w_1\geq \cdots \geq w:= \inf_{n\in \N} w_n$ $(w_n\downarrow w)$. Dann gilt
+    $$w\in \LEinsRT{\mu} \Longleftrightarrow \inf_{n\in\N}\int w_n \d\mu >-\infty $$
+    genauso wie 
+    $$\int u\d\mu = \int \inf_{n\in\N} u_n\d\mu =  \inf_{n\in\N}\int u_n\d\mu$$
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{über dominierte Konvergenz}
+Sei $(u_n)_{n\in\N} \subset \LEinsRT{\mu}$ und es gelte 
+\begin{enumerate}
+    \item $u_n(x) \overset{n\to \infty}{\longrightarrow}u(x) \quad \forall x\in E$ ($u_n$ konvergiert punktweise)
+    \item $\exists w\in \LEinsRT{\mu}$ und $\forall n\in \N, x\in E: |u(x)|\leqslant w(x)$ (Es gibt eine integrierbare Majorante).
+\end{enumerate} 
+Dann gilt:
+$$\lim _{n\to \infty} \int u_n \d\mu = \int \lim_{n\to \infty} u_n\d\mu = \int u\d\mu$$
+und $$\lim _{n\to \infty} \int |u_n-u| \d\mu = 0$$
+\end{theorem}
+
+
+
+
+\newpage
+\subsection{Parameter-Integrale}
+\begin{lemma} \Xlabel{Lemma}{subsub}{Stetigkeitslemma}
+    Es sei $u:(a,b)\times E \to \R, \; (a,b)\subset \R $ offen und es gelte:
+    \begin{enumerate}
+        \item $x\mapsto u(t,x) \in \LEins{\mu} \quad \forall t\in (a,b)$ fest
+        \item $t\mapsto u(t,x)$ stetig $\quad \forall x\in E$ fest
+        \item $|u(t,x)| \leqslant w(x) \quad \forall t\in(a,b), x\in E$ und ein festes $w\in \LEins{\mu}$
+    \end{enumerate}
+    Dann ist $$t\mapsto U(t) := \int u(t,x) \mu(dx) \in \R$$ stetig auf $(a,b)$
+\end{lemma}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Differenzierbarkeitslemma}
+        Es sei $u:(a,b)\times E \to \R, \; (a,b)\subset \R $ offen und es gelte:
+    \begin{enumerate}
+        \item $x\mapsto u(t,x) \in \LEins{\mu} \quad \forall t\in (a,b)$ fest
+        \item $t\mapsto u(t,x)$ differenzierbar $\quad \forall x\in E$ fest
+        \item $|\partial_t u(t,x)| \leqslant w(x) \quad \forall (t,x)\in (a,b)\times E$ und ein festes $w\in \LEins{\mu}$
+    \end{enumerate}
+    Dann ist $$t\mapsto U(t) := \int u(t,x) \mu(dx) \in \R$$ differenzierbar auf $(a,b)$ und 
+    $$\frac{d}{dt}U(t) = \frac{d}{dt}\int u(t,x) \mu(dx) = \int \frac{\partial}{\partial t}u(t,x)\mu(dx)$$
+\end{lemma}
+
+
+
+
+ 
+\subsection{Riemann vs. Lebesgue - Integrale}
+\begin{theorem}\Xlabel{Satz}{subsub}{Äquivalenz von Riemann und Lebesgue}
+Es sei $u:[a,b] \to \R $ Borel-meßbar und Riemann-Integrierbar. Dann gilt:
+$$u\in \LEins{[a,b],\lambda} \quad \text{und} \quad \int_a^b f(x)dx = \int_{[a,b]} u\d\lambda$$
+\end{theorem}
+
+\newpage
+
+\section{Funktionenräume und Produktmaße}
+\subsection{Die Räume $\LP{\mu}$ und $\Lp{\mu}$}
+
+\begin{definition}
+    Sei $(E,\A,\mu)$ ein Maßraum. Für $p\in [1,\infty]$ bezeichnen wir mit 
+    $$\LP{\mu}:= \{u:E\to \R | u \text{ meßbar},\; \int |u|^p \d\mu <\infty\} $$
+    den Raum der $p-$integrierbaren Funktionen. Insbesondere definiere für $p=\infty$
+    $$\mathscr{L}^\infty (\mu) = \{u:E\to \R | u \text{ meßbar},\; \exists c>0:\; \mu(\{|u|\geqslant c\}) = 0\} $$
+
+    Wir schreiben $$\lVert u\lVert_p := \left(\int |u|^p \d\mu\right)^{1/p}$$ für $1\geqslant p < \infty$ und ansonsten
+    $$\lVert u \lVert_\infty := \inf\{c>0, \mu(\{|u|\geqslant c\}) = 0\}$$
+\end{definition}
+
+\begin{corollary}
+    Aus der Definition folgt unmittelbar, dass
+    \begin{enumerate}
+        \item $u(x)\leqslant \norm{u}_\infty$ $\mu$fü
+        \item $|u(x)|\leqslant c$ $\mu$fü $\Longrightarrow \norm{u}_\infty \leqslant c$
+        \item $u\mapsto \norm{u}_p$ verhält sich im Wesentlichen wie eine Halbnorm.
+    \end{enumerate}
+\end{corollary}
+
+\begin{lemma}\Xlabel{Lemma}{subsub}{Youngsche Ungleichung}
+Seien $p,q\in (1,\infty)$ mit $1/p+1/q=1.$ Dann gilt für alle $a,b\geq 0$
+\begin{enumerate}[label=\alph*)]
+    \item $ab \leq \frac{a^p}{p}+\frac{b^q}{q}.$
+    \item Gleichheit gilt genau dann, wenn
+    $a^p=b^q \Longleftrightarrow b = a^{p-1}$
+\end{enumerate}
+\end{lemma}
+
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Höldersche Ungleichung}
+Seien $p,q\in (1,\infty)$ mit $1/p+1/q=1$ und
+$u\in \mathscr{L}^p(\mu)$, $w\in \mathscr{L}^q(\mu)$
+Dann gilt
+\begin{enumerate}[label=\alph*)]
+    \item $\displaystyle |\int uw\,\d\mu| \leq \int |uw|\,\d\mu \leq \lVert u\rVert_p\, \lVert w\rVert_q.$
+    \item Insbesondere gilt $uw\in \LEins{\mu}.$
+\end{enumerate}
+\end{theorem}
+
+
+\newpage \begin{corollary}\Xlabel{Korollar}{subsub}{Cauchy--Schwarz-Ungleichung}
+Seien $u,w\in \mathscr{L}^2(\mu).$ Dann gilt
+\begin{enumerate}[label=\alph*)]
+    \item $\displaystyle \int |uw|\,\d\mu \leq \lVert u\rVert_2\, \lVert w\rVert_2.$
+    \item Insbesondere gilt $uw\in \mathscr{L}^1(\mu).$
+\end{enumerate}
+\end{corollary}
+
+
+\begin{corollary}\Xlabel{Korollar}{subsub}{Minkowski-Ungleichung}
+Sei $p\in [1,\infty)$ und $u,w\in \mathscr{L}^p(\mu).$ Dann gilt
+\begin{enumerate}[label=\alph*)]
+    \item $\lVert u+w\rVert_p \leq \lVert u\rVert_p + \lVert w\rVert_p.$
+    \item Insbesondere gilt $u+w\in \mathscr{L}^p(\mu).$
+\end{enumerate}
+\end{corollary}
+
+\begin{note}\mbox{}\par
+\begin{enumerate}[label=\alph*)]
+    \item Satz \ref{Höldersche Ungleichung} besagt, dass wenn $u,w\in \LP{\mu}$, dann auch $\alpha u +\beta w \in \LP{\mu} \quad \forall \alpha, \beta \in \R$. Wir sind also sehr motiviert $\LP{\mu}$ als Vektorraum zu betrachten. 
+    \item Da aber aus $\norm{u}_p = 0 \Longrightarrow u = 0$ nur $\mu$--fü ist $\LP{\mu}$ nur seminormierter Raum.   
+\end{enumerate}
+\end{note}
+
+\begin{definition}
+    Wir definieren daher die Relation $\sim$ wiefolgt:
+    $$u\sim w \Longleftrightarrow \mu(\{u\neq w \}) = 0$$
+    Sodass die Äquivalenzklassen
+    $$[u]= \{w\in \LP{\mu} \mid w\sim u\}$$
+    entstehen. Insbesondere übertragen sich die Seminormen $\norm{\cdot}_p$ zu
+    $$\norm{[u]}_p := \inf\{\norm{w}_p \mid w\in [u]\}$$
+    Wir bezeichnen mit $L^p(\mu)$ den Raum $\LP{\mu}$ modulu dieser Relation, also
+    $$L^p(\mu) := \LP{\mu}/_\sim$$
+    Dann ist in der Tat $(L^p(\mu), \norm{\cdot}_p)$ ein normierter Vektorraum. Im Zuge dessen sind alle künftigen Relationen immer als ''geltend bis auf Ausnahme-Nullmengen fast überall'' zu verstehen.
+\end{definition}
+
+\begin{definition}\label{Cauchy-LP}
+    Sei $(u_n)_{n\in\N} \subset \LP{\mu}, u\in \LP{\mu}$ und $p\in [1,\infty]$. Dann meint
+
+    $$(a) \quad u_n \overset{L^p}{\underset{n\to \infty}{\longrightarrow }}u\Longleftrightarrow L^p-\lim_{n\to \infty} u_n = u \Longleftrightarrow \lim_{n\to \infty} \norm{u_n -u}_p = 0$$
+    und $(u_n)_{n\in \N}\subset \LP{\mu}$ heißt $L^p-$Cauchy Folge, falls
+    $$(b) \quad \forall \epsilon > 0 \; \exists N\in \N \; \forall n,k\geqslant N: \; \norm{u_n -u_k}_p < \epsilon$$
+\end{definition}
+
+\begin{lemma}
+    Sei $(u_n)_{n\in\N} \subset \LP{\mu}, u_n\geqslant 0$ und $p\in [1,\infty]$. Dann gilt
+    $$\norm{\sum_{n\in \N} u_n}_p \;\leqslant \;\sum_{n\in \N} \norm{u_n}_p$$
+\end{lemma}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Riesz-Fischer}
+Def. \ref{Cauchy-LP} $(a)$ und \ref{Cauchy-LP} $(b)$ sind äquivalent. Bzw:
+\begin{center}
+    $L^p(\mu), \; p\in [1,\infty]$ ist ein \person{Banach}-Raum, jede Cauchy-Folge konvergiert.
+\end{center}
+\end{theorem}
+
+\begin{corollary} Sei $(u_n)_{n\in\N} \subset \LP{\mu}, p\in [1,\infty]$ mit $u_n \overset{L^p}{\underset{n\to \infty}{\longrightarrow }}u$. 
+Dann exisitiert eine Teilfolge $(u_{n_k})_{k\in \N}\subset (u_n)_{n\in \N}$ mit 
+$$u_{n_k} \overset{n\to \infty}{\longrightarrow} u \quad \mu-fu$$
+    
+\end{corollary}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{$L^p-$ dominierte Konvergenz}
+Es sei $(u_n)_{n\in\N} \subset \LP{\mu}, p\in [1,\infty)$ mit $|u_n|\leqslant w$ für alle $n\in \N$ $\mu$-fü und ein $w\in \LP{\mu}$. \par Falls $u_{n_k} \overset{n\to \infty}{\longrightarrow} u \quad \mu-$fü, dann gilt $u\in \LP{\mu}$ und 
+$$(a) \quad \norm{u_n - u}_p \overset{n\to \infty}{\longrightarrow} 0 \quad \quad (b) \quad \norm{u_n}_p \overset{n\to \infty}{\longrightarrow} \norm{u}_p$$
+\end{theorem}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{F. Riesz}
+
+Sei $(u_n)_{n\in\N} \subset \LP{\mu}, p\in [1,\infty)$ und es gelte: $u_n \to u$ $\mu-$fü und $u\in \LP{\mu}$. Dann
+$$\norm{u_n - u}_p \overset{n\to \infty}{\longrightarrow} 0  \quad \Longleftrightarrow \quad \norm{u_n}_p \overset{n\to \infty}{\longrightarrow} \norm{u}_p$$
+    
+\end{theorem}
+
+\begin{definition}
+    Eine Funktion $V:I\to \R$ heißt konvex, falls $\forall [a,b]\subset I$ gilt:
+    $$\forall x,y\in [a,b], t\in (0,1)\quad V(tx +(1-t)y) \leqslant tV(x) + (1+t)V(y)$$
+\end{definition}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Jensen}
+Sei $V:[0,\infty)\to [0,\infty)$ konvex und $V(0^+) = V(0)$ stetig. Sei $\mu$ ein W-Maß auf $(E,\A)$. Dann gilt:
+$$V\left(\int u \d\mu\right) \leq \int V(u) \d\mu$$
+für alle $u\in \LNullPlus{\A}$
+\end{theorem}
+
+
+\subsection{Produktmaße}
+
+\begin{definition}
+    Seien $(E,\A), (F,\mathscr{B})$ zwei Meßräume. Dann heißt
+    \begin{enumerate}
+        \item $\A \otimes \mathscr{B}:= \sigma(\A\times \mathscr{B})$ die Produkt-\SigAlg
+        \item $(E,\A)\otimes(F,\mathscr{B}):= (E\times F, \A \otimes \mathscr{B})$ der Produkt-Meßraum
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}\Xlabel{Satz}{subsub}{Eindeutigkeit von Produktmaßen}
+Seien $(E,\A, \mu), (F,\mathscr{B},\nu)$ zwei Maßräume, wo $\A = \sigma(\mathscr{E})$ und $\mathscr{B}= \sigma(\mathscr{F})$ und
+\begin{enumerate}[label=\roman*)]
+    \item $\mathscr{E},\mathscr{F}$ sind $\cap-$stabil
+    \item $\exists E_i \subset \mathscr{E}, F_k \subset \mathscr{F}$ mit $E_i \uparrow E$ und $F_k \uparrow F$ sowie $\mu(E_i),\nu(F_i)<\infty$
+\end{enumerate}
+Dann existiert höchstens ein Maß $\rho$ auf $(E\times F, \A \otimes \mathscr{B})$ mit 
+$$\rho(A\times B) = \mu(A)\nu(B) \quad \forall A\times B \in \A\times \mathscr{B}$$
+
+\end{theorem}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{Existenz von Produktmaßen}
+Es seien $(E,\A, \mu), (F,\mathscr{B},\nu)$ $\sigma$-endliche Maßräume. Dann hat $\rho$ aus Satz \ref{Eindeutigkeit von Produktmaßen} eine eindeutige Fortsetzung zu einem $\sigma-$endlichem Maß auf $\A \otimes \mathscr{B}$ und $\forall U\in \A \otimes \mathscr{B}$ gilt:
+
+$$\rho(U) = \int_E \left(\int_F \1_U (x,y) \nu(dy)\right)\mu(dx) = \int_F\left(\int_E \1_U (x,y) \mu(dx)\right)\nu(dy) $$
+Das liefert auch die entsprechenden Meßbarkeiten der Funktionen
+$$y\mapsto \1_U (x,y), \quad y\mapsto \int \1_U (x,y)\mu(dx), \quad x\mapsto \1_U (x,y), \quad x\mapsto \int \1_U (x,y) \nu(dy)  $$
+\end{theorem}
+
+\begin{definition}
+    Seien $(E,\A,\mu), (F,\mathscr{B},\nu)$ zwei $\sigma-$endliche Maßräume. Dann heißt
+    \begin{enumerate}[label=\roman*)]
+        \item $(E,\A,\mu)\otimes(F,\mathscr{B},\nu):=(E\times F, \A \otimes \mathscr{B}, \rho)$ Produktmaßraum und
+        \item $\rho:= \mu\otimes \nu$ aus Satz \ref{Existenz von Produktmaßen} mit $\rho \mid _{\A\times \mathscr{B}} = \mu(A)\cdot \nu(B)$ das Produktmaß.
+    \end{enumerate}
+\end{definition}
+
+\begin{corollary}
+    $(\R^d, \Borel{\R^d}, \lambda ^d)$ ist Iteration von $(\R, \Borel{\R}, \lambda^1)$
+
+    $$(\R^d, \Borel{\R^d}, \lambda ^d) = \bigotimes_{i=1}^d (\R, \Borel{\R}, \lambda^1) $$
+\end{corollary}
+
+\begin{theorem} \Xlabel{Satz}{subsub}{Tonelli}
+Es seien $(E,\A,\mu), (F,\mathscr{B},\nu)$ zwei $\sigma-$endliche Maßräume und $u:E\times F \to [0,\infty]$ sei $\A\otimes \mathscr{B}-$meßbar. Dann gilt:
+\begin{enumerate}[label=\alph*)]
+    \item $x\mapsto u(x,y), \quad y\mapsto u(x,y)$ sind $\A$-- bzw. $\mathscr{B}$--meßbar
+    \item $x\mapsto \int u(x,y) \nu(dy), \quad y\mapsto \int u(x,y)\mu(dx)$ sind $\A$-- bzw. $\mathscr{B}$--meßbar und
+\end{enumerate}
+ $$c)\int_{E\times F} u(x,y) (\mu\otimes \nu)(d(x,y)) = \int_E \left( \int_F u(x,y)\nu(dy) \right) \mu(dx)= \int_F \left( \int_E u(x,y)\mu(dx) \right) \nu(dy) $$
+\end{theorem}
+
+\begin{corollary} \Xlabel{Satz}{subsub}{Fubini}
+Es seien $(E,\A,\mu), (F,\mathscr{B},\nu)$ zwei $\sigma$-endliche Maßräume und $u:E\times F \to \RT$ sei $\A\otimes \mathscr{B}$-meßbar. Falls eine der folgenden Integrale 
+$$\int \int |u| \d\mu\d\nu, \quad \int \int |u| \d\nu\d\mu, \quad \int |u| \d(\mu\otimes \nu)$$
+endlich ist, dann gilt:
+\begin{enumerate}[label=\alph*)]
+    \item $u\in\LEinsRT{\mu\otimes \nu}$
+    \item $x\mapsto u(x,y)\in \LEins{\mu}$ für $\nu$-fast alle $y$
+    \item $y\mapsto u(x,y)\in\LEins{\nu}$ für $\mu$-fast alle $x$
+    \item $x\mapsto \int_F u(x,y)\d\nu \in \LEinsRT{\mu}$
+    \item $y\mapsto \int_E u(x,y)\d\mu \in \LEinsRT{\nu}$
+\end{enumerate}
+$$f)\quad
+\int_{E\times F} u(x,y)(\mu\otimes \nu)(d(x,y))
+= \int_E \left( \int_F u(x,y)\nu(dy) \right)\mu(dx)
+= \int_F \left( \int_E u(x,y)\mu(dx) \right)\nu(dy).$$
+\end{corollary}
+
+\begin{note}
+Tonelli sagt:
+\begin{center}
+„Du darfst iterieren, auch wenn alles divergiert.“
+\end{center}
+Fubini sagt:
+\begin{center}
+„Du darfst vertauschen, weil alles absolut konvergiert.“
+\end{center}
+
+$\Longrightarrow$ Tonelli braucht Integrierbarkeit nicht, weil $u$ positiv sein muss. Fubini liefert die absolute Integrierbarkeit aufgrund der Konvergenzbedingung an $u$.
+\end{note}
+
+\PropertyNotice
+\end{document}
